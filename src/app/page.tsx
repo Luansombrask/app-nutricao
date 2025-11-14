@@ -1,1749 +1,1185 @@
 "use client"
 
-import { useState, useRef } from 'react'
-import { Home, TrendingUp, Settings, Plus, Search, Footprints, Flame, Droplets, Clock, MapPin, Zap, Upload, User, Calendar, Heart, ChevronRight, Star, CheckCircle, Target, Award, Trophy, Medal, BarChart3, PieChart, Activity, Filter, ChevronDown, ChevronLeft, Camera, Bell, Shield, Globe, Palette, Edit, Save, X } from 'lucide-react'
+import { useState } from 'react'
+import { ChevronRight, Target, Clock, Zap, Camera, CheckCircle, User, Mail, Phone, Sparkles, Crown, Trophy, Gift, Check, Scale, Ruler, Calendar, TrendingDown, TrendingUp, Minus, Heart, Star, Award, Flame, ArrowRight } from 'lucide-react'
 
-export default function NutritionApp() {
-  const [activeTab, setActiveTab] = useState('home')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [showPhotoUpload, setShowPhotoUpload] = useState(false)
-  const [showAddMenu, setShowAddMenu] = useState(false)
-  const [progressPeriod, setProgressPeriod] = useState('week') // day, week, month
-  const [showPeriodFilter, setShowPeriodFilter] = useState(false)
-  const [isAnalyzing, setIsAnalyzing] = useState(false)
-  const [analysisResult, setAnalysisResult] = useState(null)
-  const fileInputRef = useRef(null)
+// Componente separado para o Scanner Tutorial
+function ScannerTutorial() {
+  const [activeStep, setActiveStep] = useState(1)
 
-  // Estados para as telas de configurações
-  const [settingsView, setSettingsView] = useState('main') // main, profile, goals, preferences
-  const [isEditing, setIsEditing] = useState(false)
-
-  // Estados para dados do perfil
-  const [profileData, setProfileData] = useState({
-    name: 'João Silva',
-    email: 'joao.silva@email.com',
-    age: 28,
-    height: 175,
-    weight: 71.5,
-    activityLevel: 'Moderado',
-    goal: 'Perder peso',
-    targetWeight: 68
-  })
-
-  // Estados para metas
-  const [goalsData, setGoalsData] = useState({
-    dailyCalories: 2200,
-    dailySteps: 10000,
-    dailyWater: 2.5,
-    dailyProtein: 120,
-    weeklyWorkouts: 4,
-    sleepHours: 8
-  })
-
-  // Estados para preferências
-  const [preferencesData, setPreferencesData] = useState({
-    notifications: {
-      meals: true,
-      water: true,
-      exercise: false,
-      sleep: true
-    },
-    privacy: {
-      shareProgress: false,
-      publicProfile: false,
-      dataCollection: true
-    },
-    language: 'Português',
-    theme: 'Claro'
-  })
-
-  // Função para abrir câmera e identificar alimento
-  const handleCameraCapture = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click()
-    }
-  }
-
-  // Função para processar a imagem capturada
-  const handleImageCapture = async (event) => {
-    const file = event.target.files[0]
-    if (!file) return
-
-    setIsAnalyzing(true)
-    setShowPhotoUpload(true)
-
-    // Simular análise de IA (em produção, seria uma chamada para API de reconhecimento)
-    setTimeout(() => {
-      const mockResults = [
-        {
-          food: 'Salada Caesar com Frango',
-          confidence: 92,
-          calories: 420,
-          protein: 35,
-          carbs: 18,
-          fat: 22,
-          portion: '1 porção média'
-        },
-        {
-          food: 'Pão Integral',
-          confidence: 88,
-          calories: 180,
-          protein: 8,
-          carbs: 32,
-          fat: 3,
-          portion: '2 fatias'
-        }
-      ]
-      
-      setAnalysisResult(mockResults)
-      setIsAnalyzing(false)
-    }, 3000)
-  }
-
-  // Função para adicionar alimento identificado ao diário
-  const addToDaily = (food) => {
-    // Aqui seria a lógica para adicionar ao diário do usuário
-    console.log('Adicionando ao diário:', food)
-    setShowPhotoUpload(false)
-    setAnalysisResult(null)
-    // Reset do input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
-  }
-
-  // Função para salvar dados do perfil
-  const saveProfileData = () => {
-    setIsEditing(false)
-    // Aqui seria a lógica para salvar no backend
-    console.log('Salvando dados do perfil:', profileData)
-  }
-
-  // Função para salvar metas
-  const saveGoalsData = () => {
-    setIsEditing(false)
-    // Aqui seria a lógica para salvar no backend
-    console.log('Salvando metas:', goalsData)
-  }
-
-  // Dados simulados para demonstração
-  const weeklyStatus = [
-    { day: 'D', date: '15', status: 'good' },
-    { day: 'S', date: '16', status: 'good' },
-    { day: 'T', date: '17', status: 'good' },
-    { day: 'Q', date: '18', status: 'poor' },
-    { day: 'Q', date: '19', status: 'good' },
-    { day: 'S', date: '20', status: 'good' },
-    { day: 'S', date: '21', status: 'excellent' }
-  ]
-
-  const dailyStats = [
-    { 
-      icon: Footprints, 
-      label: 'Passos', 
-      value: '8,547', 
-      target: '10,000', 
-      unit: 'passos',
-      color: 'from-emerald-500 to-teal-600',
-      bgColor: 'bg-emerald-50'
-    },
-    { 
-      icon: Flame, 
-      label: 'Calorias Queimadas', 
-      value: '1,847', 
-      target: '2,200', 
-      unit: 'kcal',
-      color: 'from-orange-500 to-red-500',
-      bgColor: 'bg-orange-50'
-    },
-    { 
-      icon: Droplets, 
-      label: 'Água Consumida', 
-      value: '1.8', 
-      target: '2.5', 
-      unit: 'L',
-      color: 'from-cyan-400 to-blue-500',
-      bgColor: 'bg-cyan-50'
-    }
-  ]
-
-  // Dados para a área de progresso
-  const progressStats = [
-    {
-      icon: Footprints,
-      label: 'Passos',
-      current: 8547,
-      target: 10000,
-      unit: 'passos',
-      color: 'from-emerald-500 to-teal-600',
-      bgColor: 'bg-emerald-50',
-      streak: 5,
-      weeklyData: [7200, 8100, 9500, 6800, 8547, 9200, 10500]
-    },
-    {
-      icon: Flame,
-      label: 'Calorias',
-      current: 1847,
-      target: 2200,
-      unit: 'kcal',
-      color: 'from-orange-500 to-red-500',
-      bgColor: 'bg-orange-50',
-      streak: 3,
-      weeklyData: [1650, 1890, 2100, 1750, 1847, 2050, 2200]
-    },
-    {
-      icon: Droplets,
-      label: 'Água',
-      current: 1.8,
-      target: 2.5,
-      unit: 'L',
-      color: 'from-cyan-400 to-blue-500',
-      bgColor: 'bg-cyan-50',
-      streak: 7,
-      weeklyData: [2.1, 2.3, 2.5, 1.9, 1.8, 2.2, 2.4]
-    },
-    {
-      icon: Target,
-      label: 'Proteína',
-      current: 85,
-      target: 120,
-      unit: 'g',
-      color: 'from-purple-500 to-pink-500',
-      bgColor: 'bg-purple-50',
-      streak: 2,
-      weeklyData: [95, 110, 120, 88, 85, 105, 115]
-    }
-  ]
-
-  const achievements = [
-    {
-      icon: Trophy,
-      title: 'Meta de Passos',
-      description: '7 dias consecutivos atingindo 10k passos',
-      date: '2 dias atrás',
-      color: 'from-yellow-400 to-orange-500',
-      bgColor: 'bg-yellow-50'
-    },
-    {
-      icon: Medal,
-      title: 'Hidratação Perfeita',
-      description: 'Bebeu 2.5L de água por 5 dias seguidos',
-      date: '1 semana atrás',
-      color: 'from-blue-400 to-cyan-500',
-      bgColor: 'bg-blue-50'
-    },
-    {
-      icon: Award,
-      title: 'Proteína em Dia',
-      description: 'Atingiu meta de proteína 10 vezes este mês',
-      date: '3 dias atrás',
-      color: 'from-purple-400 to-pink-500',
-      bgColor: 'bg-purple-50'
-    }
-  ]
-
-  const nutritionBreakdown = {
-    calories: { consumed: 1847, target: 2200, color: 'from-orange-400 to-red-500' },
-    protein: { consumed: 85, target: 120, color: 'from-purple-400 to-pink-500' },
-    carbs: { consumed: 180, target: 250, color: 'from-blue-400 to-cyan-500' },
-    fat: { consumed: 65, target: 80, color: 'from-green-400 to-emerald-500' }
-  }
-
-  const weeklyProgress = [
-    { day: 'Dom', steps: 7200, calories: 1650, water: 2.1, weight: 72.5 },
-    { day: 'Seg', steps: 8100, calories: 1890, water: 2.3, weight: 72.3 },
-    { day: 'Ter', steps: 9500, calories: 2100, water: 2.5, weight: 72.1 },
-    { day: 'Qua', steps: 6800, calories: 1750, water: 1.9, weight: 72.0 },
-    { day: 'Qui', steps: 8547, calories: 1847, water: 1.8, weight: 71.8 },
-    { day: 'Sex', steps: 9200, calories: 2050, water: 2.2, weight: 71.6 },
-    { day: 'Sáb', steps: 10500, calories: 2200, water: 2.4, weight: 71.5 }
-  ]
-
-  const recentRecords = [
-    {
-      type: 'food',
-      name: 'Salada Caesar com Frango',
-      image: 'https://images.unsplash.com/photo-1546793665-c74683f339c1?w=120&h=120&fit=crop',
-      calories: 420,
-      carbs: 18,
-      protein: 35,
-      fat: 22,
-      time: '12:30',
-      location: 'Restaurante Saudável',
-      rating: 4.5
-    },
-    {
-      type: 'activity',
-      name: 'Corrida Matinal',
-      calories: 450,
-      intensity: 'Alta',
-      duration: '35 min',
-      time: '07:00',
-      location: 'Parque Central'
-    },
-    {
-      type: 'food',
-      name: 'Smoothie Verde Detox',
-      image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=120&h=120&fit=crop',
-      calories: 180,
-      carbs: 42,
-      protein: 4,
-      fat: 2,
-      time: '09:15',
-      location: 'Casa',
-      rating: 5.0
-    },
-    {
-      type: 'food',
-      name: 'Salmão Grelhado',
-      image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=120&h=120&fit=crop',
-      calories: 280,
-      carbs: 2,
-      protein: 28,
-      fat: 18,
-      time: '19:45',
-      location: 'Jantar em Casa',
-      rating: 4.8
-    }
-  ]
-
-  const recommendedFoods = [
-    {
-      name: 'Abacate Fresco',
-      calories: 160,
-      carbs: 9,
-      protein: 2,
-      fat: 15,
-      image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=120&h=120&fit=crop',
-      benefits: 'Rico em gorduras boas',
-      category: 'Frutas'
-    },
-    {
-      name: 'Salmão Atlântico',
-      calories: 206,
-      carbs: 0,
-      protein: 22,
-      fat: 12,
-      image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=120&h=120&fit=crop',
-      benefits: 'Alto em Ômega-3',
-      category: 'Proteínas'
-    },
-    {
-      name: 'Quinoa Orgânica',
-      calories: 222,
-      carbs: 39,
-      protein: 8,
-      fat: 4,
-      image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=120&h=120&fit=crop',
-      benefits: 'Proteína completa',
-      category: 'Grãos'
-    },
-    {
-      name: 'Espinafre Baby',
-      calories: 23,
-      carbs: 4,
-      protein: 3,
-      fat: 0,
-      image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=120&h=120&fit=crop',
-      benefits: 'Rico em ferro',
-      category: 'Vegetais'
-    }
-  ]
-
-  const addMenuOptions = [
-    { icon: Search, label: 'Buscar Alimento', action: () => setShowAddMenu(false) },
-    { icon: Upload, label: 'Foto do Prato', action: () => setShowPhotoUpload(true) },
-    { icon: Zap, label: 'Registrar Atividade', action: () => setShowAddMenu(false) },
-    { icon: Droplets, label: 'Adicionar Água', action: () => setShowAddMenu(false) }
-  ]
-
-  const renderHome = () => (
-    <div className="space-y-6">
-      {/* Calendário Horizontal com Status */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h3 className="text-xl font-bold text-gray-800">Esta Semana</h3>
-            <p className="text-sm text-gray-500">Setembro 2024</p>
+  return (
+    <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-6 space-y-6">
+      {/* Simulação Visual do Scanner */}
+      <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 min-h-[300px] flex items-center justify-center overflow-hidden">
+        {/* Efeito de Scanner */}
+        <div className={`absolute inset-0 transition-all duration-1000 ${
+          activeStep === 1 ? 'opacity-100' : 'opacity-0'
+        }`}>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="relative">
+              <div className="w-48 h-48 bg-gradient-to-br from-orange-400 to-red-500 rounded-3xl opacity-80 animate-pulse" />
+              <Camera className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 text-white animate-bounce" />
+            </div>
           </div>
-          <Calendar className="w-6 h-6 text-gray-400" />
+          <div className="absolute bottom-4 left-0 right-0 text-center">
+            <p className="text-white font-bold text-lg">📸 Tire uma foto do prato</p>
+          </div>
         </div>
-        <div className="flex justify-between items-center">
-          {weeklyStatus.map((day, index) => (
-            <div key={index} className="flex flex-col items-center space-y-3">
-              <span className="text-xs text-gray-500 font-medium">{day.day}</span>
-              <span className="text-lg font-bold text-gray-800">{day.date}</span>
-              <div className={`w-4 h-4 rounded-full shadow-sm ${
-                day.status === 'excellent' ? 'bg-gradient-to-r from-green-400 to-emerald-500' :
-                day.status === 'good' ? 'bg-green-500' : 'bg-red-400'
-              }`}>
-                {day.status === 'excellent' && (
-                  <CheckCircle className="w-4 h-4 text-white" />
-                )}
+
+        {/* IA Analisando */}
+        <div className={`absolute inset-0 transition-all duration-1000 ${
+          activeStep === 2 ? 'opacity-100' : 'opacity-0'
+        }`}>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="relative">
+              <div className="w-48 h-48 bg-gradient-to-br from-blue-400 to-purple-500 rounded-3xl opacity-80" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
+                    <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
+                    <span className="text-white text-sm font-semibold">Frango detectado</span>
+                  </div>
+                  <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
+                    <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
+                    <span className="text-white text-sm font-semibold">Salada detectada</span>
+                  </div>
+                  <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
+                    <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse" />
+                    <span className="text-white text-sm font-semibold">Analisando...</span>
+                  </div>
+                </div>
               </div>
             </div>
-          ))}
+          </div>
+          <div className="absolute bottom-4 left-0 right-0 text-center">
+            <p className="text-white font-bold text-lg">🤖 IA identificando alimentos</p>
+          </div>
         </div>
-      </div>
 
-      {/* Cards de Estatísticas Diárias */}
-      <div className="space-y-4">
-        {dailyStats.map((stat, index) => {
-          const Icon = stat.icon
-          const currentValue = parseFloat(stat.value.replace(/[^0-9.]/g, ''))
-          const targetValue = parseFloat(stat.target.replace(/[^0-9.]/g, ''))
-          const percentage = (currentValue / targetValue) * 100
-          
-          return (
-            <div key={index} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-4">
-                  <div className={`p-4 rounded-2xl ${stat.bgColor}`}>
-                    <Icon className="w-7 h-7 text-gray-700" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-gray-800">{stat.label}</h4>
-                    <p className="text-sm text-gray-500">Meta diária: {stat.target} {stat.unit}</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <span className="text-3xl font-bold text-gray-800">{stat.value}</span>
-                  <p className="text-sm text-gray-500">{stat.unit}</p>
+        {/* Resultado */}
+        <div className={`absolute inset-0 transition-all duration-1000 ${
+          activeStep === 3 ? 'opacity-100' : 'opacity-0'
+        }`}>
+          <div className="absolute inset-0 flex items-center justify-center p-6">
+            <div className="bg-white rounded-2xl p-6 w-full max-w-xs space-y-4">
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">Resultado</h3>
+                <div className="text-5xl font-bold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent">
+                  420 kcal
                 </div>
               </div>
-              
               <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Progresso</span>
-                  <span className="font-semibold text-gray-800">{Math.round(percentage)}%</span>
+                <div className="flex justify-between items-center p-3 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl">
+                  <span className="text-gray-700 font-semibold">Proteínas</span>
+                  <span className="text-cyan-600 font-bold">35g</span>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-3">
-                  <div 
-                    className={`h-3 rounded-full bg-gradient-to-r ${stat.color} transition-all duration-500 ease-out`}
-                    style={{ width: `${Math.min(percentage, 100)}%` }}
-                  />
+                <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl">
+                  <span className="text-gray-700 font-semibold">Carboidratos</span>
+                  <span className="text-blue-600 font-bold">28g</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl">
+                  <span className="text-gray-700 font-semibold">Gorduras</span>
+                  <span className="text-purple-600 font-bold">18g</span>
                 </div>
               </div>
             </div>
-          )
-        })}
-      </div>
-
-      {/* Registros Recentes */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-gray-800">Registros Recentes</h3>
-          <ChevronRight className="w-5 h-5 text-gray-400" />
-        </div>
-        <div className="space-y-4">
-          {recentRecords.map((record, index) => (
-            <div key={index} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-all cursor-pointer">
-              {record.type === 'food' ? (
-                <>
-                  <div className="relative">
-                    <img 
-                      src={record.image} 
-                      alt={record.name}
-                      className="w-16 h-16 rounded-xl object-cover shadow-sm"
-                    />
-                    {record.rating && (
-                      <div className="absolute -top-1 -right-1 bg-yellow-400 rounded-full p-1">
-                        <Star className="w-3 h-3 text-white fill-current" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-gray-800 text-base">{record.name}</h4>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600 mt-1">
-                      <span className="font-semibold text-orange-600">{record.calories} cal</span>
-                      <span>C:{record.carbs}g</span>
-                      <span>P:{record.protein}g</span>
-                      <span>G:{record.fat}g</span>
-                    </div>
-                    {record.location && (
-                      <div className="flex items-center space-x-1 mt-2">
-                        <MapPin className="w-3 h-3 text-gray-400" />
-                        <span className="text-xs text-gray-500">{record.location}</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center space-x-1 text-sm text-gray-500">
-                      <Clock className="w-4 h-4" />
-                      <span>{record.time}</span>
-                    </div>
-                    {record.rating && (
-                      <div className="flex items-center space-x-1 mt-1">
-                        <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                        <span className="text-xs text-gray-600">{record.rating}</span>
-                      </div>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-sm">
-                    <Zap className="w-8 h-8 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-gray-800 text-base">{record.name}</h4>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600 mt-1">
-                      <span className="font-semibold text-purple-600">{record.calories} cal</span>
-                      <span>{record.intensity}</span>
-                      <span>{record.duration}</span>
-                    </div>
-                    {record.location && (
-                      <div className="flex items-center space-x-1 mt-2">
-                        <MapPin className="w-3 h-3 text-gray-400" />
-                        <span className="text-xs text-gray-500">{record.location}</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center space-x-1 text-sm text-gray-500">
-                      <Clock className="w-4 h-4" />
-                      <span>{record.time}</span>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
+          </div>
+          <div className="absolute bottom-4 left-0 right-0 text-center">
+            <p className="text-white font-bold text-lg">📊 Informações completas!</p>
+          </div>
         </div>
       </div>
 
-      {/* Campo de Busca Destacado */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <h3 className="text-xl font-bold text-gray-800 mb-6">Buscar Alimentos</h3>
-        <div className="relative">
-          <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
-          <input
-            type="text"
-            placeholder="Digite o nome do alimento..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-14 pr-6 py-5 bg-gray-50 rounded-2xl border-0 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-gray-800 placeholder-gray-500 text-lg"
+      {/* Controles de Navegação */}
+      <div className="flex justify-center space-x-3">
+        {[1, 2, 3].map((step) => (
+          <button
+            key={step}
+            onClick={() => setActiveStep(step)}
+            className={`transition-all ${
+              activeStep === step
+                ? 'w-12 h-3 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full'
+                : 'w-3 h-3 bg-gray-300 rounded-full hover:bg-gray-400'
+            }`}
           />
-        </div>
-        {searchQuery && (
-          <div className="mt-4 p-4 bg-blue-50 rounded-2xl">
-            <p className="text-sm text-blue-600">Buscando por "{searchQuery}"...</p>
-          </div>
-        )}
+        ))}
       </div>
 
-      {/* Alimentos Recomendados */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h3 className="text-xl font-bold text-gray-800">Recomendados para Você</h3>
-            <p className="text-sm text-gray-500">Baseado no seu perfil e objetivos</p>
-          </div>
-          <Heart className="w-6 h-6 text-red-400" />
-        </div>
-        <div className="space-y-4">
-          {recommendedFoods.map((food, index) => (
-            <div key={index} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-all cursor-pointer group">
-              <img 
-                src={food.image} 
-                alt={food.name}
-                className="w-16 h-16 rounded-xl object-cover shadow-sm"
-              />
-              <div className="flex-1">
-                <div className="flex items-center space-x-2 mb-1">
-                  <h4 className="font-bold text-gray-800 text-base">{food.name}</h4>
-                  <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full font-medium">
-                    {food.category}
-                  </span>
-                </div>
-                <div className="flex items-center space-x-4 text-sm text-gray-600 mb-1">
-                  <span className="font-semibold text-green-600">{food.calories} cal</span>
-                  <span>C:{food.carbs}g</span>
-                  <span>P:{food.protein}g</span>
-                  <span>G:{food.fat}g</span>
-                </div>
-                <p className="text-xs text-gray-500">{food.benefits}</p>
-              </div>
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                <Plus className="w-6 h-6 text-blue-500" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-
-  const renderProgress = () => (
-    <div className="space-y-6">
-      {/* Header com Filtro de Período */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="text-2xl font-bold text-gray-800">Seu Progresso</h3>
-            <p className="text-sm text-gray-500">Acompanhe sua evolução</p>
-          </div>
-          <div className="relative">
-            <button
-              onClick={() => setShowPeriodFilter(!showPeriodFilter)}
-              className="flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-xl hover:bg-gray-200 transition-colors"
-            >
-              <Filter className="w-4 h-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700 capitalize">{progressPeriod === 'week' ? 'Semana' : progressPeriod === 'month' ? 'Mês' : 'Dia'}</span>
-              <ChevronDown className="w-4 h-4 text-gray-600" />
-            </button>
-            
-            {showPeriodFilter && (
-              <div className="absolute right-0 top-12 bg-white rounded-2xl shadow-lg border border-gray-100 py-2 z-20 min-w-[120px]">
-                {[
-                  { key: 'day', label: 'Dia' },
-                  { key: 'week', label: 'Semana' },
-                  { key: 'month', label: 'Mês' }
-                ].map((period) => (
-                  <button
-                    key={period.key}
-                    onClick={() => {
-                      setProgressPeriod(period.key)
-                      setShowPeriodFilter(false)
-                    }}
-                    className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors ${
-                      progressPeriod === period.key ? 'text-blue-600 font-semibold' : 'text-gray-700'
-                    }`}
-                  >
-                    {period.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Resumo Visual - Gráfico de Progresso Semanal */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl">
-            <BarChart3 className="w-6 h-6 text-white" />
+      {/* Descrição dos Passos */}
+      <div className="space-y-3">
+        <div className={`flex items-start space-x-3 p-3 rounded-xl transition-all ${
+          activeStep === 1 ? 'bg-gradient-to-r from-cyan-50 to-blue-50 border-2 border-cyan-300' : 'bg-gray-50'
+        }`}>
+          <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <span className="text-white font-bold text-sm">1</span>
           </div>
           <div>
-            <h4 className="text-lg font-bold text-gray-800">Evolução Semanal</h4>
-            <p className="text-sm text-gray-500">Passos realizados nos últimos 7 dias</p>
+            <h3 className="font-bold text-gray-800">Tire uma Foto</h3>
+            <p className="text-gray-600 text-sm">Aponte a câmera para seu prato</p>
           </div>
         </div>
-        
-        <div className="space-y-4">
-          {weeklyProgress.map((day, index) => {
-            const percentage = (day.steps / 10000) * 100
-            return (
-              <div key={index} className="flex items-center space-x-4">
-                <div className="w-12 text-sm font-medium text-gray-600">{day.day}</div>
-                <div className="flex-1">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-600">{day.steps.toLocaleString()} passos</span>
-                    <span className="font-semibold text-gray-800">{Math.round(percentage)}%</span>
-                  </div>
-                  <div className="w-full bg-gray-100 rounded-full h-2">
-                    <div 
-                      className="h-2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 transition-all duration-500"
-                      style={{ width: `${Math.min(percentage, 100)}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
 
-      {/* Cartões de Metas e Status */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {progressStats.map((stat, index) => {
-          const Icon = stat.icon
-          const percentage = (stat.current / stat.target) * 100
-          
-          return (
-            <div key={index} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className={`p-3 rounded-2xl ${stat.bgColor}`}>
-                  <Icon className="w-6 h-6 text-gray-700" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-bold text-gray-800">{stat.label}</h4>
-                  <p className="text-sm text-gray-500">{stat.current} / {stat.target} {stat.unit}</p>
-                </div>
-              </div>
-              
-              <div className="space-y-3">
-                <div className="w-full bg-gray-100 rounded-full h-3">
-                  <div 
-                    className={`h-3 rounded-full bg-gradient-to-r ${stat.color} transition-all duration-500`}
-                    style={{ width: `${Math.min(percentage, 100)}%` }}
-                  />
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-2xl font-bold text-gray-800">{Math.round(percentage)}%</span>
-                  <div className="flex items-center space-x-1 text-sm">
-                    <Flame className="w-4 h-4 text-orange-500" />
-                    <span className="font-semibold text-orange-600">{stat.streak} dias</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-        })}
-      </div>
-
-      {/* Breakdown Nutricional */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl">
-            <PieChart className="w-6 h-6 text-white" />
+        <div className={`flex items-start space-x-3 p-3 rounded-xl transition-all ${
+          activeStep === 2 ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-300' : 'bg-gray-50'
+        }`}>
+          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <span className="text-white font-bold text-sm">2</span>
           </div>
           <div>
-            <h4 className="text-lg font-bold text-gray-800">Macronutrientes Hoje</h4>
-            <p className="text-sm text-gray-500">Distribuição calórica</p>
+            <h3 className="font-bold text-gray-800">IA Analisa</h3>
+            <p className="text-gray-600 text-sm">Identificação automática dos alimentos</p>
           </div>
         </div>
-        
-        <div className="space-y-4">
-          {Object.entries(nutritionBreakdown).map(([key, data]) => {
-            const percentage = (data.consumed / data.target) * 100
-            const labels = {
-              calories: 'Calorias',
-              protein: 'Proteína',
-              carbs: 'Carboidratos',
-              fat: 'Gordura'
-            }
-            const units = {
-              calories: 'kcal',
-              protein: 'g',
-              carbs: 'g',
-              fat: 'g'
-            }
-            
-            return (
-              <div key={key} className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-gray-700">{labels[key]}</span>
-                  <span className="text-sm text-gray-600">{data.consumed} / {data.target} {units[key]}</span>
-                </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div 
-                    className={`h-2 rounded-full bg-gradient-to-r ${data.color} transition-all duration-500`}
-                    style={{ width: `${Math.min(percentage, 100)}%` }}
-                  />
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
 
-      {/* Histórico de Conquistas */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl">
-            <Trophy className="w-6 h-6 text-white" />
+        <div className={`flex items-start space-x-3 p-3 rounded-xl transition-all ${
+          activeStep === 3 ? 'bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-300' : 'bg-gray-50'
+        }`}>
+          <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <span className="text-white font-bold text-sm">3</span>
           </div>
           <div>
-            <h4 className="text-lg font-bold text-gray-800">Conquistas Recentes</h4>
-            <p className="text-sm text-gray-500">Seus maiores destaques</p>
-          </div>
-        </div>
-        
-        <div className="space-y-4">
-          {achievements.map((achievement, index) => {
-            const Icon = achievement.icon
-            return (
-              <div key={index} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-all cursor-pointer">
-                <div className={`p-3 rounded-2xl bg-gradient-to-r ${achievement.color} shadow-sm`}>
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
-                <div className="flex-1">
-                  <h5 className="font-bold text-gray-800">{achievement.title}</h5>
-                  <p className="text-sm text-gray-600 mt-1">{achievement.description}</p>
-                  <p className="text-xs text-gray-500 mt-2">{achievement.date}</p>
-                </div>
-                <ChevronRight className="w-5 h-5 text-gray-400" />
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Evolução do Peso */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl">
-            <Activity className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h4 className="text-lg font-bold text-gray-800">Evolução do Peso</h4>
-            <p className="text-sm text-gray-500">Últimos 7 dias</p>
-          </div>
-        </div>
-        
-        <div className="space-y-4">
-          <div className="flex justify-between items-center p-4 bg-green-50 rounded-2xl">
-            <div>
-              <span className="text-2xl font-bold text-green-600">-1.0 kg</span>
-              <p className="text-sm text-gray-600">Esta semana</p>
-            </div>
-            <div className="text-right">
-              <span className="text-lg font-semibold text-gray-800">71.5 kg</span>
-              <p className="text-sm text-gray-500">Peso atual</p>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-7 gap-2">
-            {weeklyProgress.map((day, index) => (
-              <div key={index} className="text-center">
-                <div className="text-xs text-gray-500 mb-1">{day.day}</div>
-                <div className="text-sm font-semibold text-gray-800">{day.weight}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Resumo de Hábitos */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl">
-            <CheckCircle className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h4 className="text-lg font-bold text-gray-800">Resumo de Hábitos</h4>
-            <p className="text-sm text-gray-500">Consistência nos últimos 30 dias</p>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-4">
-          <div className="text-center p-4 bg-blue-50 rounded-2xl">
-            <div className="text-2xl font-bold text-blue-600">23/30</div>
-            <div className="text-sm text-gray-600">Dias com registro</div>
-          </div>
-          <div className="text-center p-4 bg-green-50 rounded-2xl">
-            <div className="text-2xl font-bold text-green-600">18/30</div>
-            <div className="text-sm text-gray-600">Metas atingidas</div>
-          </div>
-          <div className="text-center p-4 bg-purple-50 rounded-2xl">
-            <div className="text-2xl font-bold text-purple-600">7</div>
-            <div className="text-sm text-gray-600">Sequência atual</div>
-          </div>
-          <div className="text-center p-4 bg-orange-50 rounded-2xl">
-            <div className="text-2xl font-bold text-orange-600">15</div>
-            <div className="text-sm text-gray-600">Melhor sequência</div>
+            <h3 className="font-bold text-gray-800">Resultado Instantâneo</h3>
+            <p className="text-gray-600 text-sm">Calorias e nutrientes calculados</p>
           </div>
         </div>
       </div>
     </div>
   )
+}
 
-  // Renderizar tela de Perfil
-  const renderProfile = () => (
-    <div className="space-y-6">
-      {/* Header com botão voltar */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center justify-between mb-4">
-          <button
-            onClick={() => setSettingsView('main')}
-            className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5" />
-            <span className="font-medium">Voltar</span>
-          </button>
-          <button
-            onClick={() => setIsEditing(!isEditing)}
-            className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors"
-          >
-            {isEditing ? <Save className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
-            <span className="text-sm font-medium">{isEditing ? 'Salvar' : 'Editar'}</span>
-          </button>
+export default function OnboardingQuiz() {
+  const [currentStep, setCurrentStep] = useState(0) // Começar na tela de boas-vindas
+  const [quizData, setQuizData] = useState({
+    goal: '',
+    timeframe: '',
+    name: '',
+    email: '',
+    phone: '',
+    weight: '',
+    height: '',
+    age: '',
+    mainGoal: '', // emagrecer, ganhar peso, manter peso
+    targetWeight: '',
+    idealTime: '',
+    weeklyGoal: ''
+  })
+
+  // Tela de Boas-Vindas Única
+  const renderWelcomeScreen = () => (
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-6">
+          <div className="inline-flex items-center justify-center w-32 h-32 bg-white/20 backdrop-blur-sm rounded-full mb-6 animate-bounce">
+            <Sparkles className="w-16 h-16 text-white" />
+          </div>
+          <h1 className="text-6xl font-bold text-white">Bem-vindo ao FitScan! 🎉</h1>
+          <p className="text-white/90 text-2xl leading-relaxed">
+            Sua jornada para uma vida mais saudável começa agora
+          </p>
         </div>
-        <h3 className="text-2xl font-bold text-gray-800">Meu Perfil</h3>
-        <p className="text-sm text-gray-500">Dados pessoais e objetivos</p>
-      </div>
 
-      {/* Foto do perfil */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-6">
-          <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
+        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 space-y-6">
+          <div className="text-center mb-6">
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">Vamos começar!</h2>
+            <p className="text-gray-600 text-lg">Em 2 minutos você terá seu plano personalizado</p>
+          </div>
+
+          <div className="space-y-5">
+            <div className="flex items-start space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <Camera className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-800 text-lg">Scanner Inteligente</h3>
+                <p className="text-gray-600">Tire foto da comida e saiba as calorias instantaneamente</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <Target className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-800 text-lg">Planos Personalizados</h3>
+                <p className="text-gray-600">Metas adaptadas ao seu estilo de vida</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <Trophy className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-800 text-lg">Acompanhamento Diário</h3>
+                <p className="text-gray-600">Veja seu progresso em tempo real</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setCurrentStep(1)}
+          className="w-full bg-white text-purple-600 py-6 rounded-2xl font-bold text-2xl hover:shadow-2xl transition-all hover:scale-105 flex items-center justify-center space-x-3"
+        >
+          <span>Começar Minha Jornada</span>
+          <ArrowRight className="w-7 h-7" />
+        </button>
+      </div>
+    </div>
+  )
+
+  // Etapa 1: Nome
+  const renderNameStep = () => (
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
             <User className="w-10 h-10 text-white" />
           </div>
-          <div className="flex-1">
-            <h4 className="text-xl font-bold text-gray-800">{profileData.name}</h4>
-            <p className="text-gray-500">{profileData.email}</p>
-            {isEditing && (
-              <button className="text-sm text-blue-600 hover:text-blue-700 mt-2">
-                Alterar foto
-              </button>
-            )}
-          </div>
+          <h1 className="text-4xl font-bold text-white">Como podemos te chamar?</h1>
+          <p className="text-white/90 text-lg">Digite seu nome ou apelido</p>
         </div>
-      </div>
 
-      {/* Dados pessoais */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <h4 className="text-lg font-bold text-gray-800 mb-6">Dados Pessoais</h4>
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Nome</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={profileData.name}
-                  onChange={(e) => setProfileData({...profileData, name: e.target.value})}
-                  className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-                />
-              ) : (
-                <p className="p-3 bg-gray-50 rounded-xl text-gray-800">{profileData.name}</p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-              {isEditing ? (
-                <input
-                  type="email"
-                  value={profileData.email}
-                  onChange={(e) => setProfileData({...profileData, email: e.target.value})}
-                  className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-                />
-              ) : (
-                <p className="p-3 bg-gray-50 rounded-xl text-gray-800">{profileData.email}</p>
-              )}
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Idade</label>
-              {isEditing ? (
-                <input
-                  type="number"
-                  value={profileData.age}
-                  onChange={(e) => setProfileData({...profileData, age: parseInt(e.target.value)})}
-                  className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-                />
-              ) : (
-                <p className="p-3 bg-gray-50 rounded-xl text-gray-800">{profileData.age} anos</p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Altura</label>
-              {isEditing ? (
-                <input
-                  type="number"
-                  value={profileData.height}
-                  onChange={(e) => setProfileData({...profileData, height: parseInt(e.target.value)})}
-                  className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-                />
-              ) : (
-                <p className="p-3 bg-gray-50 rounded-xl text-gray-800">{profileData.height} cm</p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Peso Atual</label>
-              {isEditing ? (
-                <input
-                  type="number"
-                  step="0.1"
-                  value={profileData.weight}
-                  onChange={(e) => setProfileData({...profileData, weight: parseFloat(e.target.value)})}
-                  className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-                />
-              ) : (
-                <p className="p-3 bg-gray-50 rounded-xl text-gray-800">{profileData.weight} kg</p>
-              )}
-            </div>
-          </div>
+        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8">
+          <label className="block text-gray-700 font-semibold mb-3">Seu Nome</label>
+          <input
+            type="text"
+            value={quizData.name}
+            onChange={(e) => setQuizData({ ...quizData, name: e.target.value })}
+            placeholder="Ex: Maria Silva"
+            className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
+          />
         </div>
-      </div>
 
-      {/* Objetivos */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <h4 className="text-lg font-bold text-gray-800 mb-6">Objetivos</h4>
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Nível de Atividade</label>
-              {isEditing ? (
-                <select
-                  value={profileData.activityLevel}
-                  onChange={(e) => setProfileData({...profileData, activityLevel: e.target.value})}
-                  className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-                >
-                  <option value="Sedentário">Sedentário</option>
-                  <option value="Leve">Leve</option>
-                  <option value="Moderado">Moderado</option>
-                  <option value="Intenso">Intenso</option>
-                  <option value="Muito Intenso">Muito Intenso</option>
-                </select>
-              ) : (
-                <p className="p-3 bg-gray-50 rounded-xl text-gray-800">{profileData.activityLevel}</p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Objetivo Principal</label>
-              {isEditing ? (
-                <select
-                  value={profileData.goal}
-                  onChange={(e) => setProfileData({...profileData, goal: e.target.value})}
-                  className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-                >
-                  <option value="Perder peso">Perder peso</option>
-                  <option value="Manter peso">Manter peso</option>
-                  <option value="Ganhar peso">Ganhar peso</option>
-                  <option value="Ganhar massa muscular">Ganhar massa muscular</option>
-                </select>
-              ) : (
-                <p className="p-3 bg-gray-50 rounded-xl text-gray-800">{profileData.goal}</p>
-              )}
-            </div>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Peso Meta</label>
-            {isEditing ? (
-              <input
-                type="number"
-                step="0.1"
-                value={profileData.targetWeight}
-                onChange={(e) => setProfileData({...profileData, targetWeight: parseFloat(e.target.value)})}
-                className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-              />
-            ) : (
-              <p className="p-3 bg-gray-50 rounded-xl text-gray-800">{profileData.targetWeight} kg</p>
-            )}
-          </div>
+        <button
+          onClick={() => quizData.name && setCurrentStep(2)}
+          disabled={!quizData.name}
+          className={`w-full py-5 rounded-2xl font-bold text-xl transition-all ${
+            quizData.name
+              ? 'bg-white text-purple-600 hover:shadow-2xl hover:scale-105'
+              : 'bg-white/40 text-white/60 cursor-not-allowed'
+          }`}
+        >
+          Continuar
+        </button>
+
+        <div className="flex justify-center space-x-2 pt-4">
+          {Array.from({ length: 15 }).map((_, dot) => (
+            <div
+              key={dot}
+              className={`h-2 rounded-full transition-all ${
+                dot === 0 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+              }`}
+            />
+          ))}
         </div>
-        
-        {isEditing && (
-          <div className="flex space-x-3 mt-6">
-            <button
-              onClick={() => setIsEditing(false)}
-              className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={saveProfileData}
-              className="flex-1 bg-blue-500 text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors"
-            >
-              Salvar Alterações
-            </button>
-          </div>
-        )}
       </div>
     </div>
   )
 
-  // Renderizar tela de Metas
-  const renderGoals = () => (
-    <div className="space-y-6">
-      {/* Header com botão voltar */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center justify-between mb-4">
-          <button
-            onClick={() => setSettingsView('main')}
-            className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5" />
-            <span className="font-medium">Voltar</span>
-          </button>
-          <button
-            onClick={() => setIsEditing(!isEditing)}
-            className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors"
-          >
-            {isEditing ? <Save className="w-4 h-4" /> : <Edit className="w-4 h-4" />}
-            <span className="text-sm font-medium">{isEditing ? 'Salvar' : 'Editar'}</span>
-          </button>
+  // Etapa 2: Idade
+  const renderAgeStep = () => (
+    <div className="min-h-screen bg-gradient-to-br from-orange-600 via-red-500 to-pink-500 flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
+            <Calendar className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold text-white">Qual é a sua idade?</h1>
+          <p className="text-white/90 text-lg">Isso nos ajuda a personalizar seu metabolismo</p>
         </div>
-        <h3 className="text-2xl font-bold text-gray-800">Minhas Metas</h3>
-        <p className="text-sm text-gray-500">Configure seus objetivos diários</p>
-      </div>
 
-      {/* Metas Nutricionais */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl">
-            <Flame className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h4 className="text-lg font-bold text-gray-800">Metas Nutricionais</h4>
-            <p className="text-sm text-gray-500">Objetivos diários de alimentação</p>
-          </div>
+        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8">
+          <label className="block text-gray-700 font-semibold mb-3">Idade (anos)</label>
+          <input
+            type="number"
+            value={quizData.age}
+            onChange={(e) => setQuizData({ ...quizData, age: e.target.value })}
+            placeholder="Ex: 28"
+            className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-200 transition-all text-gray-800 text-lg"
+          />
         </div>
-        
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Calorias Diárias</label>
-              {isEditing ? (
-                <input
-                  type="number"
-                  value={goalsData.dailyCalories}
-                  onChange={(e) => setGoalsData({...goalsData, dailyCalories: parseInt(e.target.value)})}
-                  className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-                />
-              ) : (
-                <div className="p-3 bg-gray-50 rounded-xl">
-                  <span className="text-2xl font-bold text-orange-600">{goalsData.dailyCalories}</span>
-                  <span className="text-gray-600 ml-2">kcal</span>
-                </div>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Proteína Diária</label>
-              {isEditing ? (
-                <input
-                  type="number"
-                  value={goalsData.dailyProtein}
-                  onChange={(e) => setGoalsData({...goalsData, dailyProtein: parseInt(e.target.value)})}
-                  className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-                />
-              ) : (
-                <div className="p-3 bg-gray-50 rounded-xl">
-                  <span className="text-2xl font-bold text-purple-600">{goalsData.dailyProtein}</span>
-                  <span className="text-gray-600 ml-2">g</span>
-                </div>
-              )}
-            </div>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Água Diária</label>
-            {isEditing ? (
-              <input
-                type="number"
-                step="0.1"
-                value={goalsData.dailyWater}
-                onChange={(e) => setGoalsData({...goalsData, dailyWater: parseFloat(e.target.value)})}
-                className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-              />
-            ) : (
-              <div className="p-3 bg-gray-50 rounded-xl">
-                <span className="text-2xl font-bold text-cyan-600">{goalsData.dailyWater}</span>
-                <span className="text-gray-600 ml-2">L</span>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
 
-      {/* Metas de Atividade */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl">
-            <Footprints className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h4 className="text-lg font-bold text-gray-800">Metas de Atividade</h4>
-            <p className="text-sm text-gray-500">Objetivos de movimento e exercício</p>
-          </div>
-        </div>
-        
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Passos Diários</label>
-              {isEditing ? (
-                <input
-                  type="number"
-                  value={goalsData.dailySteps}
-                  onChange={(e) => setGoalsData({...goalsData, dailySteps: parseInt(e.target.value)})}
-                  className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-                />
-              ) : (
-                <div className="p-3 bg-gray-50 rounded-xl">
-                  <span className="text-2xl font-bold text-emerald-600">{goalsData.dailySteps.toLocaleString()}</span>
-                  <span className="text-gray-600 ml-2">passos</span>
-                </div>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Treinos por Semana</label>
-              {isEditing ? (
-                <input
-                  type="number"
-                  value={goalsData.weeklyWorkouts}
-                  onChange={(e) => setGoalsData({...goalsData, weeklyWorkouts: parseInt(e.target.value)})}
-                  className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-                />
-              ) : (
-                <div className="p-3 bg-gray-50 rounded-xl">
-                  <span className="text-2xl font-bold text-purple-600">{goalsData.weeklyWorkouts}</span>
-                  <span className="text-gray-600 ml-2">treinos</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+        <button
+          onClick={() => quizData.age && setCurrentStep(3)}
+          disabled={!quizData.age}
+          className={`w-full py-5 rounded-2xl font-bold text-xl transition-all ${
+            quizData.age
+              ? 'bg-white text-orange-600 hover:shadow-2xl hover:scale-105'
+              : 'bg-white/40 text-white/60 cursor-not-allowed'
+          }`}
+        >
+          Continuar
+        </button>
 
-      {/* Meta de Sono */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl">
-            <Clock className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h4 className="text-lg font-bold text-gray-800">Meta de Sono</h4>
-            <p className="text-sm text-gray-500">Horas de descanso por noite</p>
-          </div>
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Horas de Sono</label>
-          {isEditing ? (
-            <input
-              type="number"
-              value={goalsData.sleepHours}
-              onChange={(e) => setGoalsData({...goalsData, sleepHours: parseInt(e.target.value)})}
-              className="w-full p-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
+        <div className="flex justify-center space-x-2 pt-4">
+          {Array.from({ length: 15 }).map((_, dot) => (
+            <div
+              key={dot}
+              className={`h-2 rounded-full transition-all ${
+                dot === 1 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+              }`}
             />
-          ) : (
-            <div className="p-3 bg-gray-50 rounded-xl">
-              <span className="text-2xl font-bold text-indigo-600">{goalsData.sleepHours}</span>
-              <span className="text-gray-600 ml-2">horas</span>
-            </div>
-          )}
+          ))}
         </div>
       </div>
+    </div>
+  )
 
-      {/* Progresso das Metas */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <h4 className="text-lg font-bold text-gray-800 mb-6">Progresso Atual</h4>
+  // Etapa 3: Peso Atual
+  const renderWeightStep = () => (
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-500 to-pink-500 flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
+            <Scale className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold text-white">Qual é o seu peso atual?</h1>
+          <p className="text-white/90 text-lg">Seja honesto, isso nos ajuda a personalizar seu plano</p>
+        </div>
+
+        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8">
+          <label className="block text-gray-700 font-semibold mb-3">Peso Atual (kg)</label>
+          <input
+            type="number"
+            value={quizData.weight}
+            onChange={(e) => setQuizData({ ...quizData, weight: e.target.value })}
+            placeholder="Ex: 75"
+            className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
+          />
+        </div>
+
+        <button
+          onClick={() => quizData.weight && setCurrentStep(4)}
+          disabled={!quizData.weight}
+          className={`w-full py-5 rounded-2xl font-bold text-xl transition-all ${
+            quizData.weight
+              ? 'bg-white text-purple-600 hover:shadow-2xl hover:scale-105'
+              : 'bg-white/40 text-white/60 cursor-not-allowed'
+          }`}
+        >
+          Continuar
+        </button>
+
+        <div className="flex justify-center space-x-2 pt-4">
+          {Array.from({ length: 15 }).map((_, dot) => (
+            <div
+              key={dot}
+              className={`h-2 rounded-full transition-all ${
+                dot === 2 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+
+  // Etapa 4: Altura
+  const renderHeightStep = () => (
+    <div className="min-h-screen bg-gradient-to-br from-green-600 via-emerald-500 to-teal-500 flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
+            <Ruler className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold text-white">Qual é a sua altura?</h1>
+          <p className="text-white/90 text-lg">Vamos calcular seu IMC ideal</p>
+        </div>
+
+        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8">
+          <label className="block text-gray-700 font-semibold mb-3">Altura (cm)</label>
+          <input
+            type="number"
+            value={quizData.height}
+            onChange={(e) => setQuizData({ ...quizData, height: e.target.value })}
+            placeholder="Ex: 170"
+            className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-green-500 focus:ring-4 focus:ring-green-200 transition-all text-gray-800 text-lg"
+          />
+        </div>
+
+        <button
+          onClick={() => quizData.height && setCurrentStep(5)}
+          disabled={!quizData.height}
+          className={`w-full py-5 rounded-2xl font-bold text-xl transition-all ${
+            quizData.height
+              ? 'bg-white text-green-600 hover:shadow-2xl hover:scale-105'
+              : 'bg-white/40 text-white/60 cursor-not-allowed'
+          }`}
+        >
+          Continuar
+        </button>
+
+        <div className="flex justify-center space-x-2 pt-4">
+          {Array.from({ length: 15 }).map((_, dot) => (
+            <div
+              key={dot}
+              className={`h-2 rounded-full transition-all ${
+                dot === 3 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+
+  // Etapa 5: Objetivo Principal (emagrecer, ganhar, manter)
+  const renderMainGoalStep = () => (
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
+            <Target className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold text-white">Qual é o seu objetivo?</h1>
+          <p className="text-white/90 text-lg">Escolha o que melhor descreve sua meta</p>
+        </div>
+
         <div className="space-y-4">
           {[
-            { label: 'Calorias', current: 1847, target: goalsData.dailyCalories, color: 'from-orange-500 to-red-500' },
-            { label: 'Passos', current: 8547, target: goalsData.dailySteps, color: 'from-emerald-500 to-teal-600' },
-            { label: 'Água', current: 1.8, target: goalsData.dailyWater, color: 'from-cyan-400 to-blue-500' },
-            { label: 'Proteína', current: 85, target: goalsData.dailyProtein, color: 'from-purple-500 to-pink-500' }
-          ].map((item, index) => {
-            const percentage = (item.current / item.target) * 100
+            { id: 'lose', label: 'Perder Peso', desc: 'Quero emagrecer de forma saudável', icon: TrendingDown, gradient: 'from-red-500 to-orange-500' },
+            { id: 'maintain', label: 'Manter Peso', desc: 'Quero manter meu peso atual', icon: Minus, gradient: 'from-blue-500 to-cyan-500' },
+            { id: 'gain', label: 'Ganhar Peso', desc: 'Quero ganhar massa muscular', icon: TrendingUp, gradient: 'from-green-500 to-emerald-500' }
+          ].map((option) => {
+            const Icon = option.icon
             return (
-              <div key={index} className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-gray-700">{item.label}</span>
-                  <span className="text-sm text-gray-600">{item.current} / {item.target}</span>
+              <button
+                key={option.id}
+                onClick={() => {
+                  setQuizData({ ...quizData, mainGoal: option.id })
+                  setCurrentStep(6)
+                }}
+                className="w-full bg-white/95 backdrop-blur-sm rounded-3xl p-6 hover:bg-white transition-all hover:scale-105 hover:shadow-2xl group"
+              >
+                <div className="flex items-center space-x-4">
+                  <div className={`w-14 h-14 bg-gradient-to-r ${option.gradient} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                    <Icon className="w-7 h-7 text-white" />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <h3 className="text-xl font-bold text-gray-800">{option.label}</h3>
+                    <p className="text-gray-600 text-sm">{option.desc}</p>
+                  </div>
+                  <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div 
-                    className={`h-2 rounded-full bg-gradient-to-r ${item.color} transition-all duration-500`}
-                    style={{ width: `${Math.min(percentage, 100)}%` }}
-                  />
-                </div>
-              </div>
+              </button>
             )
           })}
         </div>
-      </div>
 
-      {isEditing && (
-        <div className="flex space-x-3">
-          <button
-            onClick={() => setIsEditing(false)}
-            className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={saveGoalsData}
-            className="flex-1 bg-blue-500 text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors"
-          >
-            Salvar Metas
-          </button>
-        </div>
-      )}
-    </div>
-  )
-
-  // Renderizar tela de Preferências
-  const renderPreferences = () => (
-    <div className="space-y-6">
-      {/* Header com botão voltar */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center justify-between mb-4">
-          <button
-            onClick={() => setSettingsView('main')}
-            className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5" />
-            <span className="font-medium">Voltar</span>
-          </button>
-        </div>
-        <h3 className="text-2xl font-bold text-gray-800">Preferências</h3>
-        <p className="text-sm text-gray-500">Configurações do aplicativo</p>
-      </div>
-
-      {/* Notificações */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl">
-            <Bell className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h4 className="text-lg font-bold text-gray-800">Notificações</h4>
-            <p className="text-sm text-gray-500">Gerencie seus lembretes</p>
-          </div>
-        </div>
-        
-        <div className="space-y-4">
-          {[
-            { key: 'meals', label: 'Lembretes de Refeições', description: 'Receba notificações para registrar suas refeições' },
-            { key: 'water', label: 'Lembretes de Hidratação', description: 'Seja lembrado de beber água regularmente' },
-            { key: 'exercise', label: 'Lembretes de Exercício', description: 'Notificações para manter-se ativo' },
-            { key: 'sleep', label: 'Lembretes de Sono', description: 'Alertas para manter uma rotina de sono saudável' }
-          ].map((notification) => (
-            <div key={notification.key} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
-              <div className="flex-1">
-                <h5 className="font-semibold text-gray-800">{notification.label}</h5>
-                <p className="text-sm text-gray-600 mt-1">{notification.description}</p>
-              </div>
-              <button
-                onClick={() => setPreferencesData({
-                  ...preferencesData,
-                  notifications: {
-                    ...preferencesData.notifications,
-                    [notification.key]: !preferencesData.notifications[notification.key]
-                  }
-                })}
-                className={`w-12 h-6 rounded-full transition-colors ${
-                  preferencesData.notifications[notification.key] 
-                    ? 'bg-blue-500' 
-                    : 'bg-gray-300'
-                }`}
-              >
-                <div className={`w-5 h-5 bg-white rounded-full shadow-sm transition-transform ${
-                  preferencesData.notifications[notification.key] 
-                    ? 'translate-x-6' 
-                    : 'translate-x-0.5'
-                }`} />
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Privacidade */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl">
-            <Shield className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h4 className="text-lg font-bold text-gray-800">Privacidade</h4>
-            <p className="text-sm text-gray-500">Controle seus dados pessoais</p>
-          </div>
-        </div>
-        
-        <div className="space-y-4">
-          {[
-            { key: 'shareProgress', label: 'Compartilhar Progresso', description: 'Permitir que amigos vejam seu progresso' },
-            { key: 'publicProfile', label: 'Perfil Público', description: 'Tornar seu perfil visível para outros usuários' },
-            { key: 'dataCollection', label: 'Coleta de Dados', description: 'Permitir coleta de dados para melhorar o app' }
-          ].map((privacy) => (
-            <div key={privacy.key} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
-              <div className="flex-1">
-                <h5 className="font-semibold text-gray-800">{privacy.label}</h5>
-                <p className="text-sm text-gray-600 mt-1">{privacy.description}</p>
-              </div>
-              <button
-                onClick={() => setPreferencesData({
-                  ...preferencesData,
-                  privacy: {
-                    ...preferencesData.privacy,
-                    [privacy.key]: !preferencesData.privacy[privacy.key]
-                  }
-                })}
-                className={`w-12 h-6 rounded-full transition-colors ${
-                  preferencesData.privacy[privacy.key] 
-                    ? 'bg-green-500' 
-                    : 'bg-gray-300'
-                }`}
-              >
-                <div className={`w-5 h-5 bg-white rounded-full shadow-sm transition-transform ${
-                  preferencesData.privacy[privacy.key] 
-                    ? 'translate-x-6' 
-                    : 'translate-x-0.5'
-                }`} />
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Idioma */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl">
-            <Globe className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h4 className="text-lg font-bold text-gray-800">Idioma</h4>
-            <p className="text-sm text-gray-500">Escolha seu idioma preferido</p>
-          </div>
-        </div>
-        
-        <select
-          value={preferencesData.language}
-          onChange={(e) => setPreferencesData({...preferencesData, language: e.target.value})}
-          className="w-full p-4 bg-gray-50 rounded-2xl border-0 focus:ring-2 focus:ring-blue-500 text-gray-800"
-        >
-          <option value="Português">Português</option>
-          <option value="English">English</option>
-          <option value="Español">Español</option>
-          <option value="Français">Français</option>
-        </select>
-      </div>
-
-      {/* Tema */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl">
-            <Palette className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h4 className="text-lg font-bold text-gray-800">Tema</h4>
-            <p className="text-sm text-gray-500">Personalize a aparência do app</p>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-3">
-          {['Claro', 'Escuro'].map((theme) => (
-            <button
-              key={theme}
-              onClick={() => setPreferencesData({...preferencesData, theme})}
-              className={`p-4 rounded-2xl border-2 transition-all ${
-                preferencesData.theme === theme
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
+        <div className="flex justify-center space-x-2 pt-4">
+          {Array.from({ length: 15 }).map((_, dot) => (
+            <div
+              key={dot}
+              className={`h-2 rounded-full transition-all ${
+                dot === 4 ? 'w-8 bg-white' : 'w-2 bg-white/40'
               }`}
-            >
-              <div className="text-center">
-                <div className={`w-8 h-8 mx-auto mb-2 rounded-full ${
-                  theme === 'Claro' ? 'bg-yellow-400' : 'bg-gray-800'
-                }`} />
-                <span className="font-medium text-gray-800">{theme}</span>
-              </div>
-            </button>
+            />
           ))}
         </div>
-      </div>
-
-      {/* Botões de ação */}
-      <div className="space-y-3">
-        <button className="w-full bg-red-50 text-red-600 py-4 rounded-2xl font-semibold hover:bg-red-100 transition-colors">
-          Limpar Cache do App
-        </button>
-        <button className="w-full bg-gray-100 text-gray-700 py-4 rounded-2xl font-semibold hover:bg-gray-200 transition-colors">
-          Exportar Dados
-        </button>
-        <button className="w-full bg-red-500 text-white py-4 rounded-2xl font-semibold hover:bg-red-600 transition-colors">
-          Excluir Conta
-        </button>
       </div>
     </div>
   )
 
-  const renderSettings = () => {
-    if (settingsView === 'profile') return renderProfile()
-    if (settingsView === 'goals') return renderGoals()
-    if (settingsView === 'preferences') return renderPreferences()
+  // Etapa 6: Motivação Intermediária
+  const renderMotivationStep1 = () => (
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-6">
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full mb-4 animate-pulse">
+            <Heart className="w-12 h-12 text-white" />
+          </div>
+          <h1 className="text-5xl font-bold text-white">Você está indo muito bem! 🎉</h1>
+          <p className="text-white/90 text-xl leading-relaxed">
+            Já estamos montando um plano perfeito para você. Continue, falta pouco!
+          </p>
+        </div>
+
+        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 space-y-4">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
+              <Check className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h3 className="font-bold text-gray-800 text-lg">Dados Coletados</h3>
+              <p className="text-gray-600">Peso, altura e idade registrados</p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
+              <Sparkles className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h3 className="font-bold text-gray-800 text-lg">IA Analisando</h3>
+              <p className="text-gray-600">Criando seu plano personalizado</p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center animate-pulse">
+              <Flame className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h3 className="font-bold text-gray-800 text-lg">Próximo Passo</h3>
+              <p className="text-gray-600">Definir sua meta de peso</p>
+            </div>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setCurrentStep(7)}
+          className="w-full bg-white text-orange-600 py-5 rounded-2xl font-bold text-xl hover:shadow-2xl transition-all hover:scale-105"
+        >
+          Continuar Minha Jornada
+        </button>
+
+        <div className="flex justify-center space-x-2 pt-4">
+          {Array.from({ length: 15 }).map((_, dot) => (
+            <div
+              key={dot}
+              className={`h-2 rounded-full transition-all ${
+                dot === 5 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+
+  // Etapa 7: Peso Alvo
+  const renderTargetWeightStep = () => {
+    const currentWeight = parseFloat(quizData.weight) || 0
+    const goalText = quizData.mainGoal === 'lose' ? 'alcançar' : quizData.mainGoal === 'gain' ? 'alcançar' : 'manter'
     
     return (
-      <div className="space-y-6">
-        <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-          <h3 className="text-xl font-bold text-gray-800 mb-6">Configurações</h3>
-          <div className="space-y-4">
-            <button
-              onClick={() => setSettingsView('profile')}
-              className="flex items-center space-x-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors w-full"
-            >
-              <User className="w-6 h-6 text-gray-600" />
-              <div className="flex-1 text-left">
-                <h4 className="font-semibold text-gray-800">Perfil</h4>
-                <p className="text-sm text-gray-500">Dados pessoais e objetivos</p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </button>
+      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 flex items-center justify-center p-6">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
+              <Target className="w-10 h-10 text-white" />
+            </div>
+            <h1 className="text-4xl font-bold text-white">Qual é o seu peso ideal?</h1>
+            <p className="text-white/90 text-lg">
+              Você está em {currentWeight}kg. Qual peso deseja {goalText}?
+            </p>
+          </div>
+
+          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8">
+            <label className="block text-gray-700 font-semibold mb-3">Peso Alvo (kg)</label>
+            <input
+              type="number"
+              value={quizData.targetWeight}
+              onChange={(e) => setQuizData({ ...quizData, targetWeight: e.target.value })}
+              placeholder="Ex: 68"
+              className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
+            />
             
-            <button
-              onClick={() => setSettingsView('goals')}
-              className="flex items-center space-x-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors w-full"
-            >
-              <Target className="w-6 h-6 text-gray-600" />
-              <div className="flex-1 text-left">
-                <h4 className="font-semibold text-gray-800">Metas</h4>
-                <p className="text-sm text-gray-500">Definir objetivos diários</p>
+            {quizData.targetWeight && (
+              <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border-2 border-purple-200">
+                <p className="text-gray-700 font-semibold">
+                  {quizData.mainGoal === 'lose' && `Você quer perder ${(currentWeight - parseFloat(quizData.targetWeight)).toFixed(1)}kg`}
+                  {quizData.mainGoal === 'gain' && `Você quer ganhar ${(parseFloat(quizData.targetWeight) - currentWeight).toFixed(1)}kg`}
+                  {quizData.mainGoal === 'maintain' && `Você quer manter seu peso atual`}
+                </p>
               </div>
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </button>
-            
-            <button
-              onClick={() => setSettingsView('preferences')}
-              className="flex items-center space-x-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors w-full"
-            >
-              <Settings className="w-6 h-6 text-gray-600" />
-              <div className="flex-1 text-left">
-                <h4 className="font-semibold text-gray-800">Preferências</h4>
-                <p className="text-sm text-gray-500">Notificações e privacidade</p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </button>
+            )}
+          </div>
+
+          <button
+            onClick={() => quizData.targetWeight && setCurrentStep(8)}
+            disabled={!quizData.targetWeight}
+            className={`w-full py-5 rounded-2xl font-bold text-xl transition-all ${
+              quizData.targetWeight
+                ? 'bg-white text-purple-600 hover:shadow-2xl hover:scale-105'
+                : 'bg-white/40 text-white/60 cursor-not-allowed'
+            }`}
+          >
+            Continuar
+          </button>
+
+          <div className="flex justify-center space-x-2 pt-4">
+            {Array.from({ length: 15 }).map((_, dot) => (
+              <div
+                key={dot}
+                className={`h-2 rounded-full transition-all ${
+                  dot === 6 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                }`}
+              />
+            ))}
           </div>
         </div>
       </div>
     )
   }
 
-  const renderPhotoUpload = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-6">
-      <div className="bg-white rounded-3xl p-6 w-full max-w-sm max-h-[90vh] overflow-y-auto">
-        {!analysisResult ? (
-          <>
-            <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
-              {isAnalyzing ? 'Analisando Alimento...' : 'Reconhecimento Nutricional'}
-            </h3>
-            
-            {isAnalyzing ? (
-              <div className="space-y-6">
-                <div className="flex items-center justify-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center animate-pulse">
-                    <Camera className="w-8 h-8 text-white" />
-                  </div>
-                </div>
-                <div className="text-center">
-                  <p className="text-gray-600 mb-4">Nossa IA está identificando os alimentos na sua foto...</p>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full animate-pulse" style={{ width: '70%' }}></div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center">
-                  <Camera className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 mb-4">Tire uma foto do seu prato para análise nutricional</p>
-                  <button 
-                    onClick={handleCameraCapture}
-                    className="bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors"
-                  >
-                    Abrir Câmera
-                  </button>
-                </div>
-                
-                <div className="bg-gray-50 p-4 rounded-2xl">
-                  <h4 className="font-semibold text-gray-800 mb-2">Como funciona:</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• IA analisa os alimentos na foto</li>
-                    <li>• Calcula calorias e macronutrientes</li>
-                    <li>• Adiciona automaticamente ao seu diário</li>
-                  </ul>
-                </div>
-              </div>
-            )}
-            
-            {!isAnalyzing && (
-              <div className="flex space-x-3 mt-6">
-                <button 
-                  onClick={() => {
-                    setShowPhotoUpload(false)
-                    setAnalysisResult(null)
-                  }}
-                  className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
-                >
-                  Cancelar
-                </button>
-              </div>
-            )}
-          </>
-        ) : (
-          <>
-            <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">Alimentos Identificados</h3>
-            
-            <div className="space-y-4">
-              {analysisResult.map((food, index) => (
-                <div key={index} className="bg-gray-50 rounded-2xl p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-bold text-gray-800">{food.food}</h4>
-                    <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full font-medium">
-                      {food.confidence}% confiança
-                    </span>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-3 text-sm mb-3">
-                    <div className="text-center p-2 bg-white rounded-xl">
-                      <div className="font-bold text-orange-600">{food.calories}</div>
-                      <div className="text-gray-500">kcal</div>
-                    </div>
-                    <div className="text-center p-2 bg-white rounded-xl">
-                      <div className="font-bold text-purple-600">{food.protein}g</div>
-                      <div className="text-gray-500">Proteína</div>
-                    </div>
-                    <div className="text-center p-2 bg-white rounded-xl">
-                      <div className="font-bold text-blue-600">{food.carbs}g</div>
-                      <div className="text-gray-500">Carboidratos</div>
-                    </div>
-                    <div className="text-center p-2 bg-white rounded-xl">
-                      <div className="font-bold text-green-600">{food.fat}g</div>
-                      <div className="text-gray-500">Gordura</div>
-                    </div>
-                  </div>
-                  
-                  <p className="text-xs text-gray-500 mb-3">Porção: {food.portion}</p>
-                  
-                  <button
-                    onClick={() => addToDaily(food)}
-                    className="w-full bg-blue-500 text-white py-2 rounded-xl font-semibold hover:bg-blue-600 transition-colors"
-                  >
-                    Adicionar ao Diário
-                  </button>
-                </div>
-              ))}
+  // Etapa 8: Tempo Ideal para Alcançar Meta
+  const renderIdealTimeStep = () => {
+    const currentWeight = parseFloat(quizData.weight) || 0
+    const targetWeight = parseFloat(quizData.targetWeight) || 0
+    const difference = Math.abs(currentWeight - targetWeight)
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyan-600 via-blue-500 to-purple-600 flex items-center justify-center p-6">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
+              <Clock className="w-10 h-10 text-white" />
             </div>
-            
-            <div className="flex space-x-3 mt-6">
-              <button 
+            <h1 className="text-4xl font-bold text-white">Em quanto tempo?</h1>
+            <p className="text-white/90 text-lg">
+              Escolha o prazo ideal para {quizData.mainGoal === 'lose' ? 'perder' : quizData.mainGoal === 'gain' ? 'ganhar' : 'manter'} {difference.toFixed(1)}kg
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              { id: '1-month', label: '1 Mês', desc: 'Ritmo acelerado', recommended: difference <= 4 },
+              { id: '2-months', label: '2 Meses', desc: 'Equilíbrio ideal', recommended: difference > 4 && difference <= 8 },
+              { id: '3-months', label: '3 Meses', desc: 'Sustentável e saudável', recommended: difference > 8 && difference <= 12 },
+              { id: '6-months', label: '6 Meses', desc: 'Transformação gradual', recommended: difference > 12 && difference <= 20 },
+              { id: '1-year', label: '1 Ano', desc: 'Mudança de estilo de vida', recommended: difference > 20 }
+            ].map((option) => (
+              <button
+                key={option.id}
                 onClick={() => {
-                  setShowPhotoUpload(false)
-                  setAnalysisResult(null)
+                  setQuizData({ ...quizData, idealTime: option.id })
+                  setCurrentStep(9)
                 }}
-                className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+                className={`w-full bg-white/95 backdrop-blur-sm rounded-3xl p-6 hover:bg-white transition-all hover:scale-105 hover:shadow-2xl group relative ${
+                  option.recommended ? 'border-4 border-yellow-400' : ''
+                }`}
               >
-                Fechar
+                {option.recommended && (
+                  <div className="absolute top-0 right-0 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-bl-2xl rounded-tr-2xl font-bold text-xs">
+                    RECOMENDADO
+                  </div>
+                )}
+                <div className="flex items-center space-x-4">
+                  <div className="w-14 h-14 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Clock className="w-7 h-7 text-white" />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <h3 className="text-xl font-bold text-gray-800">{option.label}</h3>
+                    <p className="text-gray-600 text-sm">{option.desc}</p>
+                  </div>
+                  <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-cyan-600 group-hover:translate-x-1 transition-all" />
+                </div>
               </button>
-              <button 
-                onClick={handleCameraCapture}
-                className="flex-1 bg-blue-500 text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors"
-              >
-                Nova Foto
-              </button>
+            ))}
+          </div>
+
+          <div className="flex justify-center space-x-2 pt-4">
+            {Array.from({ length: 15 }).map((_, dot) => (
+              <div
+                key={dot}
+                className={`h-2 rounded-full transition-all ${
+                  dot === 7 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Etapa 9: Meta Semanal
+  const renderWeeklyGoalStep = () => {
+    const currentWeight = parseFloat(quizData.weight) || 0
+    const targetWeight = parseFloat(quizData.targetWeight) || 0
+    const difference = Math.abs(currentWeight - targetWeight)
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-600 via-emerald-500 to-teal-500 flex items-center justify-center p-6">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
+              <TrendingDown className="w-10 h-10 text-white" />
             </div>
-          </>
-        )}
+            <h1 className="text-4xl font-bold text-white">Meta Semanal</h1>
+            <p className="text-white/90 text-lg">
+              Quantos quilos por semana você quer {quizData.mainGoal === 'lose' ? 'perder' : quizData.mainGoal === 'gain' ? 'ganhar' : 'manter'}?
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              { id: '0.25', label: '0,25 kg/semana', desc: 'Muito gradual e sustentável', recommended: difference <= 5 },
+              { id: '0.5', label: '0,5 kg/semana', desc: 'Ritmo saudável recomendado', recommended: difference > 5 && difference <= 10 },
+              { id: '0.75', label: '0,75 kg/semana', desc: 'Moderado e eficaz', recommended: difference > 10 && difference <= 15 },
+              { id: '1', label: '1 kg/semana', desc: 'Acelerado mas seguro', recommended: difference > 15 }
+            ].map((option) => (
+              <button
+                key={option.id}
+                onClick={() => {
+                  setQuizData({ ...quizData, weeklyGoal: option.id })
+                  setCurrentStep(10)
+                }}
+                className={`w-full bg-white/95 backdrop-blur-sm rounded-3xl p-6 hover:bg-white transition-all hover:scale-105 hover:shadow-2xl group relative ${
+                  option.recommended ? 'border-4 border-yellow-400' : ''
+                }`}
+              >
+                {option.recommended && (
+                  <div className="absolute top-0 right-0 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-3 py-1 rounded-bl-2xl rounded-tr-2xl font-bold text-xs">
+                    IDEAL PARA VOCÊ
+                  </div>
+                )}
+                <div className="flex items-center space-x-4">
+                  <div className="w-14 h-14 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Scale className="w-7 h-7 text-white" />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <h3 className="text-xl font-bold text-gray-800">{option.label}</h3>
+                    <p className="text-gray-600 text-sm">{option.desc}</p>
+                  </div>
+                  <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-green-600 group-hover:translate-x-1 transition-all" />
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <div className="flex justify-center space-x-2 pt-4">
+            {Array.from({ length: 15 }).map((_, dot) => (
+              <div
+                key={dot}
+                className={`h-2 rounded-full transition-all ${
+                  dot === 8 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Etapa 10: Motivação Intermediária 2
+  const renderMotivationStep2 = () => {
+    const currentWeight = parseFloat(quizData.weight) || 0
+    const targetWeight = parseFloat(quizData.targetWeight) || 0
+    const difference = Math.abs(currentWeight - targetWeight)
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-pink-600 via-purple-500 to-indigo-600 flex items-center justify-center p-6">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center space-y-6">
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full mb-4 animate-bounce">
+              <Star className="w-12 h-12 text-white" />
+            </div>
+            <h1 className="text-5xl font-bold text-white">Incrível! 🌟</h1>
+            <p className="text-white/90 text-xl leading-relaxed">
+              Seu plano está quase pronto. Você está no caminho certo para alcançar seus objetivos!
+            </p>
+          </div>
+
+          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 space-y-6">
+            <div className="text-center space-y-4">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full">
+                <Trophy className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800">Seu Resumo</h3>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl">
+                <span className="text-gray-700 font-semibold">Peso Atual</span>
+                <span className="text-2xl font-bold text-purple-600">{currentWeight}kg</span>
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl">
+                <span className="text-gray-700 font-semibold">Peso Alvo</span>
+                <span className="text-2xl font-bold text-indigo-600">{targetWeight}kg</span>
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl">
+                <span className="text-gray-700 font-semibold">
+                  {quizData.mainGoal === 'lose' ? 'Perder' : quizData.mainGoal === 'gain' ? 'Ganhar' : 'Manter'}
+                </span>
+                <span className="text-2xl font-bold text-blue-600">{difference.toFixed(1)}kg</span>
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl">
+                <span className="text-gray-700 font-semibold">Meta Semanal</span>
+                <span className="text-2xl font-bold text-cyan-600">{quizData.weeklyGoal}kg</span>
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setCurrentStep(11)}
+            className="w-full bg-white text-purple-600 py-5 rounded-2xl font-bold text-xl hover:shadow-2xl transition-all hover:scale-105"
+          >
+            Continuar para Finalizar
+          </button>
+
+          <div className="flex justify-center space-x-2 pt-4">
+            {Array.from({ length: 15 }).map((_, dot) => (
+              <div
+                key={dot}
+                className={`h-2 rounded-full transition-all ${
+                  dot === 9 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Etapa 11: Objetivo de Emagrecimento
+  const renderGoalStep = () => (
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
+            <Target className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold text-white">Qual é o seu foco principal?</h1>
+          <p className="text-white/90 text-lg">Escolha o que mais se alinha com você</p>
+        </div>
+
+        <div className="space-y-4">
+          {[
+            { id: 'lose-weight', label: 'Perder Peso', desc: 'Quero emagrecer de forma saudável', icon: Target },
+            { id: 'maintain', label: 'Manter Peso', desc: 'Quero manter meu peso atual', icon: CheckCircle },
+            { id: 'gain-muscle', label: 'Ganhar Massa', desc: 'Quero ganhar músculos', icon: Zap },
+            { id: 'healthy-life', label: 'Vida Saudável', desc: 'Quero ter hábitos mais saudáveis', icon: Sparkles }
+          ].map((option) => {
+            const Icon = option.icon
+            return (
+              <button
+                key={option.id}
+                onClick={() => {
+                  setQuizData({ ...quizData, goal: option.id })
+                  setCurrentStep(12)
+                }}
+                className="w-full bg-white/95 backdrop-blur-sm rounded-3xl p-6 hover:bg-white transition-all hover:scale-105 hover:shadow-2xl group"
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Icon className="w-7 h-7 text-white" />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <h3 className="text-xl font-bold text-gray-800">{option.label}</h3>
+                    <p className="text-gray-600 text-sm">{option.desc}</p>
+                  </div>
+                  <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />
+                </div>
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="flex justify-center space-x-2 pt-4">
+          {Array.from({ length: 15 }).map((_, dot) => (
+            <div
+              key={dot}
+              className={`h-2 rounded-full transition-all ${
+                dot === 10 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Input oculto para captura de câmera */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        capture="environment"
-        onChange={handleImageCapture}
-        className="hidden"
-      />
+  // Etapa 12: Tempo disponível
+  const renderTimeframeStep = () => (
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
+            <Clock className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold text-white">Quanto tempo você tem por dia?</h1>
+          <p className="text-white/90 text-lg">Para dedicar aos seus objetivos</p>
+        </div>
 
-      {/* Header */}
-      <div className="bg-white shadow-sm sticky top-0 z-10 border-b border-gray-100">
-        <div className="px-6 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">NutriApp</h1>
-              <p className="text-sm text-gray-500">Sua jornada saudável</p>
+        <div className="space-y-4">
+          {[
+            { id: '15-min', label: '15 minutos', desc: 'Rotina rápida e eficiente' },
+            { id: '30-min', label: '30 minutos', desc: 'Equilíbrio perfeito' },
+            { id: '45-min', label: '45 minutos', desc: 'Dedicação moderada' },
+            { id: '1-hour', label: '1 hora ou mais', desc: 'Comprometimento total' }
+          ].map((option) => (
+            <button
+              key={option.id}
+              onClick={() => {
+                setQuizData({ ...quizData, timeframe: option.id })
+                setCurrentStep(13)
+              }}
+              className="w-full bg-white/95 backdrop-blur-sm rounded-3xl p-6 hover:bg-white transition-all hover:scale-105 hover:shadow-2xl group"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="w-14 h-14 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Clock className="w-7 h-7 text-white" />
+                </div>
+                <div className="flex-1 text-left">
+                  <h3 className="text-xl font-bold text-gray-800">{option.label}</h3>
+                  <p className="text-gray-600 text-sm">{option.desc}</p>
+                </div>
+                <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <div className="flex justify-center space-x-2 pt-4">
+          {Array.from({ length: 15 }).map((_, dot) => (
+            <div
+              key={dot}
+              className={`h-2 rounded-full transition-all ${
+                dot === 11 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+
+  // Etapa 13: Tutorial do Scanner com Imagem Interativa
+  const renderScannerTutorial = () => {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 flex items-center justify-center p-6">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full mb-4 animate-pulse">
+              <Camera className="w-12 h-12 text-white" />
             </div>
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
-              <User className="w-5 h-5 text-white" />
-            </div>
+            <h1 className="text-4xl font-bold text-white">Scanner Inteligente</h1>
+            <p className="text-white/90 text-lg">Veja como é simples medir suas calorias</p>
+          </div>
+
+          {/* Componente Scanner Tutorial */}
+          <ScannerTutorial />
+
+          <button
+            onClick={() => setCurrentStep(14)}
+            className="w-full bg-white py-5 rounded-2xl font-bold text-xl hover:shadow-2xl transition-all hover:scale-105"
+          >
+            <span className="bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent">
+              Entendi, Continuar
+            </span>
+          </button>
+
+          <div className="flex justify-center space-x-2 pt-4">
+            {Array.from({ length: 15 }).map((_, dot) => (
+              <div
+                key={dot}
+                className={`h-2 rounded-full transition-all ${
+                  dot === 12 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                }`}
+              />
+            ))}
           </div>
         </div>
       </div>
+    )
+  }
 
-      {/* Content */}
-      <div className="px-6 py-6 pb-32">
-        {activeTab === 'home' && renderHome()}
-        {activeTab === 'progress' && renderProgress()}
-        {activeTab === 'settings' && renderSettings()}
+  // Etapa 14: Email e Telefone
+  const renderContactStep = () => (
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
+            <Mail className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold text-white">Seus Dados de Contato</h1>
+          <p className="text-white/90 text-lg">Para manter você conectado</p>
+        </div>
+
+        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 space-y-6">
+          <div>
+            <label className="block text-gray-700 font-semibold mb-3 flex items-center space-x-2">
+              <Mail className="w-5 h-5" />
+              <span>Email</span>
+            </label>
+            <input
+              type="email"
+              value={quizData.email}
+              onChange={(e) => setQuizData({ ...quizData, email: e.target.value })}
+              placeholder="seu@email.com"
+              className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 font-semibold mb-3 flex items-center space-x-2">
+              <Phone className="w-5 h-5" />
+              <span>Telefone</span>
+            </label>
+            <input
+              type="tel"
+              value={quizData.phone}
+              onChange={(e) => setQuizData({ ...quizData, phone: e.target.value })}
+              placeholder="(11) 99999-9999"
+              className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
+            />
+          </div>
+        </div>
+
+        <button
+          onClick={() => quizData.email && quizData.phone && setCurrentStep(15)}
+          disabled={!quizData.email || !quizData.phone}
+          className={`w-full py-5 rounded-2xl font-bold text-xl transition-all ${
+            quizData.email && quizData.phone
+              ? 'bg-white text-purple-600 hover:shadow-2xl hover:scale-105'
+              : 'bg-white/40 text-white/60 cursor-not-allowed'
+          }`}
+        >
+          Continuar
+        </button>
+
+        <div className="flex justify-center space-x-2 pt-4">
+          {Array.from({ length: 15 }).map((_, dot) => (
+            <div
+              key={dot}
+              className={`h-2 rounded-full transition-all ${
+                dot === 13 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+              }`}
+            />
+          ))}
+        </div>
       </div>
+    </div>
+  )
 
-      {/* Menu de Adição */}
-      {showAddMenu && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-40">
-          <div className="bg-white rounded-t-3xl p-6 w-full max-w-md">
-            <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
-            <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">Adicionar</h3>
-            <div className="space-y-3">
-              {addMenuOptions.map((option, index) => {
-                const Icon = option.icon
-                return (
-                  <button
-                    key={index}
-                    onClick={option.action}
-                    className="w-full flex items-center space-x-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors"
-                  >
-                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                      <Icon className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <span className="font-semibold text-gray-800">{option.label}</span>
-                  </button>
-                )
-              })}
+  // Etapa 15: Oferta de Assinatura
+  const renderOfferStep = () => (
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 flex items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full mb-4 animate-bounce">
+            <Trophy className="w-12 h-12 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold text-white">Parabéns, {quizData.name}! 🎉</h1>
+          <p className="text-white/90 text-xl">Você está pronto para transformar sua vida!</p>
+        </div>
+
+        <div className="space-y-4">
+          {/* Plano Anual */}
+          <div className="bg-white rounded-3xl p-6 shadow-2xl border-4 border-yellow-300 relative overflow-hidden">
+            <div className="absolute top-0 right-0 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-1 rounded-bl-2xl font-bold text-sm">
+              MELHOR OFERTA
             </div>
-            <button 
-              onClick={() => setShowAddMenu(false)}
-              className="w-full mt-6 bg-gray-100 text-gray-700 py-4 rounded-2xl font-semibold hover:bg-gray-200 transition-colors"
-            >
-              Cancelar
+            <div className="pt-4">
+              <div className="flex items-center space-x-3 mb-4">
+                <Crown className="w-8 h-8 text-yellow-500" />
+                <h3 className="text-2xl font-bold text-gray-800">Plano Anual</h3>
+              </div>
+              <div className="mb-4">
+                <div className="flex items-baseline space-x-2">
+                  <span className="text-5xl font-bold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">R$ 299</span>
+                  <span className="text-gray-500 line-through text-xl">R$ 599</span>
+                </div>
+                <p className="text-gray-600 mt-1">Apenas R$ 24,90/mês</p>
+              </div>
+              <ul className="space-y-3 mb-6">
+                {[
+                  'Scanner ilimitado de alimentos',
+                  'Planos personalizados de nutrição',
+                  'Acompanhamento de progresso',
+                  'Suporte prioritário 24/7',
+                  'Acesso a receitas exclusivas'
+                ].map((feature, idx) => (
+                  <li key={idx} className="flex items-center space-x-3">
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                    <span className="text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <button className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white py-4 rounded-2xl font-bold text-lg hover:shadow-2xl transition-all hover:scale-105">
+                Assinar Plano Anual
+              </button>
+            </div>
+          </div>
+
+          {/* Plano Mensal */}
+          <div className="bg-white rounded-3xl p-6 shadow-xl">
+            <div className="flex items-center space-x-3 mb-4">
+              <Sparkles className="w-7 h-7 text-purple-500" />
+              <h3 className="text-xl font-bold text-gray-800">Plano Mensal</h3>
+            </div>
+            <div className="mb-4">
+              <div className="flex items-baseline space-x-2">
+                <span className="text-4xl font-bold text-gray-800">R$ 49,90</span>
+                <span className="text-gray-500">/mês</span>
+              </div>
+            </div>
+            <ul className="space-y-2 mb-6">
+              {[
+                'Scanner ilimitado de alimentos',
+                'Planos personalizados',
+                'Acompanhamento básico'
+              ].map((feature, idx) => (
+                <li key={idx} className="flex items-center space-x-3">
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  <span className="text-gray-700 text-sm">{feature}</span>
+                </li>
+              ))}
+            </ul>
+            <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-2xl font-bold hover:shadow-xl transition-all hover:scale-105">
+              Assinar Plano Mensal
+            </button>
+          </div>
+
+          {/* Trial Gratuito */}
+          <div className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-3xl p-6 border-2 border-cyan-200">
+            <div className="flex items-center space-x-3 mb-3">
+              <Gift className="w-7 h-7 text-cyan-600" />
+              <h3 className="text-lg font-bold text-gray-800">Teste Grátis por 3 Dias</h3>
+            </div>
+            <p className="text-gray-600 mb-4 text-sm">
+              Experimente todos os recursos premium sem compromisso. Cancele quando quiser!
+            </p>
+            <button className="w-full bg-white text-cyan-600 border-2 border-cyan-500 py-4 rounded-2xl font-bold hover:bg-cyan-50 transition-all">
+              Começar Teste Grátis
             </button>
           </div>
         </div>
-      )}
 
-      {/* Modal de Upload de Foto */}
-      {showPhotoUpload && renderPhotoUpload()}
-
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-4 z-30">
-        <div className="flex items-center justify-around">
-          <button
-            onClick={() => setActiveTab('home')}
-            className={`flex flex-col items-center space-y-1 p-3 rounded-2xl transition-all ${
-              activeTab === 'home' ? 'text-blue-600 bg-blue-50' : 'text-gray-600'
-            }`}
-          >
-            <Home className="w-6 h-6" />
-            <span className="text-xs font-semibold">Home</span>
-          </button>
-          
-          <button
-            onClick={() => setActiveTab('progress')}
-            className={`flex flex-col items-center space-y-1 p-3 rounded-2xl transition-all ${
-              activeTab === 'progress' ? 'text-blue-600 bg-blue-50' : 'text-gray-600'
-            }`}
-          >
-            <TrendingUp className="w-6 h-6" />
-            <span className="text-xs font-semibold">Progress</span>
-          </button>
-          
-          <button
-            onClick={() => {
-              setActiveTab('settings')
-              setSettingsView('main')
-            }}
-            className={`flex flex-col items-center space-y-1 p-3 rounded-2xl transition-all ${
-              activeTab === 'settings' ? 'text-blue-600 bg-blue-50' : 'text-gray-600'
-            }`}
-          >
-            <Settings className="w-6 h-6" />
-            <span className="text-xs font-semibold">Settings</span>
-          </button>
+        <div className="flex justify-center space-x-2 pt-4">
+          {Array.from({ length: 15 }).map((_, dot) => (
+            <div
+              key={dot}
+              className={`h-2 rounded-full transition-all ${
+                dot === 14 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+              }`}
+            />
+          ))}
         </div>
       </div>
-
-      {/* Floating Action Button - MODIFICADO PARA CÂMERA */}
-      <button 
-        onClick={handleCameraCapture}
-        className="fixed bottom-24 right-6 w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full shadow-xl flex items-center justify-center hover:shadow-2xl transition-all hover:scale-105 z-30"
-      >
-        <Camera className="w-7 h-7 text-white" />
-      </button>
     </div>
   )
+
+  // Renderizar etapa atual
+  const renderCurrentStep = () => {
+    switch(currentStep) {
+      case 0: return renderWelcomeScreen()
+      case 1: return renderNameStep()
+      case 2: return renderAgeStep()
+      case 3: return renderWeightStep()
+      case 4: return renderHeightStep()
+      case 5: return renderMainGoalStep()
+      case 6: return renderMotivationStep1()
+      case 7: return renderTargetWeightStep()
+      case 8: return renderIdealTimeStep()
+      case 9: return renderWeeklyGoalStep()
+      case 10: return renderMotivationStep2()
+      case 11: return renderGoalStep()
+      case 12: return renderTimeframeStep()
+      case 13: return renderScannerTutorial()
+      case 14: return renderContactStep()
+      case 15: return renderOfferStep()
+      default: return renderWelcomeScreen()
+    }
+  }
+
+  return renderCurrentStep()
 }
