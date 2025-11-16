@@ -8,7 +8,7 @@ function ScannerTutorial() {
   const [activeStep, setActiveStep] = useState(1)
 
   return (
-    <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-6 space-y-6">
+    <div className="bg-white rounded-3xl p-6 space-y-6">
       {/* Simulação Visual do Scanner */}
       <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 min-h-[300px] flex items-center justify-center overflow-hidden">
         {/* Efeito de Scanner */}
@@ -166,19 +166,19 @@ export default function OnboardingQuiz() {
 
   // Tela de Boas-Vindas Única
   const renderWelcomeScreen = () => (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-6">
-          <div className="inline-flex items-center justify-center w-32 h-32 bg-white/20 backdrop-blur-sm rounded-full mb-6 animate-bounce">
-            <Sparkles className="w-16 h-16 text-white" />
+          <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full mb-6 animate-bounce">
+            <Sparkles className="w-16 h-16 text-purple-600" />
           </div>
-          <h1 className="text-6xl font-bold text-white">Bem-vindo ao FitScan! 🎉</h1>
-          <p className="text-white/90 text-2xl leading-relaxed">
+          <h1 className="text-6xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 bg-clip-text text-transparent">Bem-vindo ao FitScan! 🎉</h1>
+          <p className="text-gray-600 text-2xl leading-relaxed">
             Sua jornada para uma vida mais saudável começa agora
           </p>
         </div>
 
-        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 space-y-6">
+        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 space-y-6 border-2 border-purple-200">
           <div className="text-center mb-6">
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Vamos começar!</h2>
             <p className="text-gray-600 text-lg">Em 2 minutos você terá seu plano personalizado</p>
@@ -219,7 +219,7 @@ export default function OnboardingQuiz() {
 
         <button
           onClick={() => setCurrentStep(1)}
-          className="w-full bg-white text-purple-600 py-6 rounded-2xl font-bold text-2xl hover:shadow-2xl transition-all hover:scale-105 flex items-center justify-center space-x-3"
+          className="w-full bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 text-white py-6 rounded-2xl font-bold text-2xl hover:shadow-2xl transition-all hover:scale-105 flex items-center justify-center space-x-3"
         >
           <span>Começar Minha Jornada</span>
           <ArrowRight className="w-7 h-7" />
@@ -230,24 +230,27 @@ export default function OnboardingQuiz() {
 
   // Etapa 1: Nome
   const renderNameStep = () => (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
-            <User className="w-10 h-10 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full mb-4">
+            <User className="w-10 h-10 text-purple-600" />
           </div>
-          <h1 className="text-4xl font-bold text-white">Como podemos te chamar?</h1>
-          <p className="text-white/90 text-lg">Digite seu nome ou apelido</p>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">FitScan</h2>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-800">Como podemos te chamar?</h1>
+          <p className="text-gray-600 text-lg">Digite seu nome ou apelido</p>
         </div>
 
-        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8">
+        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 border-2 border-purple-200">
           <label className="block text-gray-700 font-semibold mb-3">Seu Nome</label>
           <input
             type="text"
             value={quizData.name}
             onChange={(e) => setQuizData({ ...quizData, name: e.target.value })}
             placeholder="Ex: Maria Silva"
-            className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
+            className="w-full p-5 bg-white rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
           />
         </div>
 
@@ -256,8 +259,8 @@ export default function OnboardingQuiz() {
           disabled={!quizData.name}
           className={`w-full py-5 rounded-2xl font-bold text-xl transition-all ${
             quizData.name
-              ? 'bg-white text-purple-600 hover:shadow-2xl hover:scale-105'
-              : 'bg-white/40 text-white/60 cursor-not-allowed'
+              ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white hover:shadow-2xl hover:scale-105'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
           Continuar
@@ -268,7 +271,7 @@ export default function OnboardingQuiz() {
             <div
               key={dot}
               className={`h-2 rounded-full transition-all ${
-                dot === 0 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                dot === 0 ? 'w-8 bg-purple-600' : 'w-2 bg-gray-300'
               }`}
             />
           ))}
@@ -279,24 +282,27 @@ export default function OnboardingQuiz() {
 
   // Etapa 2: Idade
   const renderAgeStep = () => (
-    <div className="min-h-screen bg-gradient-to-br from-orange-600 via-red-500 to-pink-500 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
-            <Calendar className="w-10 h-10 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-orange-100 to-red-100 rounded-full mb-4">
+            <Calendar className="w-10 h-10 text-orange-600" />
           </div>
-          <h1 className="text-4xl font-bold text-white">Qual é a sua idade?</h1>
-          <p className="text-white/90 text-lg">Isso nos ajuda a personalizar seu metabolismo</p>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-500 bg-clip-text text-transparent mb-2">FitScan</h2>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-800">Qual é a sua idade?</h1>
+          <p className="text-gray-600 text-lg">Isso nos ajuda a personalizar seu metabolismo</p>
         </div>
 
-        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8">
+        <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-3xl p-8 border-2 border-orange-200">
           <label className="block text-gray-700 font-semibold mb-3">Idade (anos)</label>
           <input
             type="number"
             value={quizData.age}
             onChange={(e) => setQuizData({ ...quizData, age: e.target.value })}
             placeholder="Ex: 28"
-            className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-200 transition-all text-gray-800 text-lg"
+            className="w-full p-5 bg-white rounded-2xl border-2 border-gray-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-200 transition-all text-gray-800 text-lg"
           />
         </div>
 
@@ -305,8 +311,8 @@ export default function OnboardingQuiz() {
           disabled={!quizData.age}
           className={`w-full py-5 rounded-2xl font-bold text-xl transition-all ${
             quizData.age
-              ? 'bg-white text-orange-600 hover:shadow-2xl hover:scale-105'
-              : 'bg-white/40 text-white/60 cursor-not-allowed'
+              ? 'bg-gradient-to-r from-orange-600 to-red-500 text-white hover:shadow-2xl hover:scale-105'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
           Continuar
@@ -317,7 +323,7 @@ export default function OnboardingQuiz() {
             <div
               key={dot}
               className={`h-2 rounded-full transition-all ${
-                dot === 1 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                dot === 1 ? 'w-8 bg-orange-600' : 'w-2 bg-gray-300'
               }`}
             />
           ))}
@@ -328,24 +334,27 @@ export default function OnboardingQuiz() {
 
   // Etapa 3: Peso Atual
   const renderWeightStep = () => (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-500 to-pink-500 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
-            <Scale className="w-10 h-10 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full mb-4">
+            <Scale className="w-10 h-10 text-blue-600" />
           </div>
-          <h1 className="text-4xl font-bold text-white">Qual é o seu peso atual?</h1>
-          <p className="text-white/90 text-lg">Seja honesto, isso nos ajuda a personalizar seu plano</p>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text text-transparent mb-2">FitScan</h2>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-800">Qual é o seu peso atual?</h1>
+          <p className="text-gray-600 text-lg">Seja honesto, isso nos ajuda a personalizar seu plano</p>
         </div>
 
-        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8">
+        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-8 border-2 border-blue-200">
           <label className="block text-gray-700 font-semibold mb-3">Peso Atual (kg)</label>
           <input
             type="number"
             value={quizData.weight}
             onChange={(e) => setQuizData({ ...quizData, weight: e.target.value })}
             placeholder="Ex: 75"
-            className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
+            className="w-full p-5 bg-white rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
           />
         </div>
 
@@ -354,8 +363,8 @@ export default function OnboardingQuiz() {
           disabled={!quizData.weight}
           className={`w-full py-5 rounded-2xl font-bold text-xl transition-all ${
             quizData.weight
-              ? 'bg-white text-purple-600 hover:shadow-2xl hover:scale-105'
-              : 'bg-white/40 text-white/60 cursor-not-allowed'
+              ? 'bg-gradient-to-r from-blue-600 to-purple-500 text-white hover:shadow-2xl hover:scale-105'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
           Continuar
@@ -366,7 +375,7 @@ export default function OnboardingQuiz() {
             <div
               key={dot}
               className={`h-2 rounded-full transition-all ${
-                dot === 2 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                dot === 2 ? 'w-8 bg-purple-600' : 'w-2 bg-gray-300'
               }`}
             />
           ))}
@@ -377,24 +386,27 @@ export default function OnboardingQuiz() {
 
   // Etapa 4: Altura
   const renderHeightStep = () => (
-    <div className="min-h-screen bg-gradient-to-br from-green-600 via-emerald-500 to-teal-500 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
-            <Ruler className="w-10 h-10 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full mb-4">
+            <Ruler className="w-10 h-10 text-green-600" />
           </div>
-          <h1 className="text-4xl font-bold text-white">Qual é a sua altura?</h1>
-          <p className="text-white/90 text-lg">Vamos calcular seu IMC ideal</p>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent mb-2">FitScan</h2>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-800">Qual é a sua altura?</h1>
+          <p className="text-gray-600 text-lg">Vamos calcular seu IMC ideal</p>
         </div>
 
-        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8">
+        <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl p-8 border-2 border-green-200">
           <label className="block text-gray-700 font-semibold mb-3">Altura (cm)</label>
           <input
             type="number"
             value={quizData.height}
             onChange={(e) => setQuizData({ ...quizData, height: e.target.value })}
             placeholder="Ex: 170"
-            className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-green-500 focus:ring-4 focus:ring-green-200 transition-all text-gray-800 text-lg"
+            className="w-full p-5 bg-white rounded-2xl border-2 border-gray-200 focus:border-green-500 focus:ring-4 focus:ring-green-200 transition-all text-gray-800 text-lg"
           />
         </div>
 
@@ -403,8 +415,8 @@ export default function OnboardingQuiz() {
           disabled={!quizData.height}
           className={`w-full py-5 rounded-2xl font-bold text-xl transition-all ${
             quizData.height
-              ? 'bg-white text-green-600 hover:shadow-2xl hover:scale-105'
-              : 'bg-white/40 text-white/60 cursor-not-allowed'
+              ? 'bg-gradient-to-r from-green-600 to-emerald-500 text-white hover:shadow-2xl hover:scale-105'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
           Continuar
@@ -415,7 +427,7 @@ export default function OnboardingQuiz() {
             <div
               key={dot}
               className={`h-2 rounded-full transition-all ${
-                dot === 3 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                dot === 3 ? 'w-8 bg-green-600' : 'w-2 bg-gray-300'
               }`}
             />
           ))}
@@ -426,14 +438,17 @@ export default function OnboardingQuiz() {
 
   // Etapa 5: Objetivo Principal (emagrecer, ganhar, manter)
   const renderMainGoalStep = () => (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
-            <Target className="w-10 h-10 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full mb-4">
+            <Target className="w-10 h-10 text-purple-600" />
           </div>
-          <h1 className="text-4xl font-bold text-white">Qual é o seu objetivo?</h1>
-          <p className="text-white/90 text-lg">Escolha o que melhor descreve sua meta</p>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">FitScan</h2>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-800">Qual é o seu objetivo?</h1>
+          <p className="text-gray-600 text-lg">Escolha o que melhor descreve sua meta</p>
         </div>
 
         <div className="space-y-4">
@@ -450,7 +465,7 @@ export default function OnboardingQuiz() {
                   setQuizData({ ...quizData, mainGoal: option.id })
                   setCurrentStep(6)
                 }}
-                className="w-full bg-white/95 backdrop-blur-sm rounded-3xl p-6 hover:bg-white transition-all hover:scale-105 hover:shadow-2xl group"
+                className="w-full bg-gradient-to-br from-gray-50 to-white border-2 border-gray-200 rounded-3xl p-6 hover:border-purple-300 hover:shadow-xl transition-all hover:scale-105 group"
               >
                 <div className="flex items-center space-x-4">
                   <div className={`w-14 h-14 bg-gradient-to-r ${option.gradient} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
@@ -472,7 +487,7 @@ export default function OnboardingQuiz() {
             <div
               key={dot}
               className={`h-2 rounded-full transition-all ${
-                dot === 4 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                dot === 4 ? 'w-8 bg-purple-600' : 'w-2 bg-gray-300'
               }`}
             />
           ))}
@@ -483,19 +498,22 @@ export default function OnboardingQuiz() {
 
   // Etapa 6: Motivação Intermediária
   const renderMotivationStep1 = () => (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-6">
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full mb-4 animate-pulse">
-            <Heart className="w-12 h-12 text-white" />
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-full mb-4 animate-pulse">
+            <Heart className="w-12 h-12 text-orange-600" />
           </div>
-          <h1 className="text-5xl font-bold text-white">Você está indo muito bem! 🎉</h1>
-          <p className="text-white/90 text-xl leading-relaxed">
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-yellow-600 to-orange-500 bg-clip-text text-transparent mb-2">FitScan</h2>
+          </div>
+          <h1 className="text-5xl font-bold text-gray-800">Você está indo muito bem! 🎉</h1>
+          <p className="text-gray-600 text-xl leading-relaxed">
             Já estamos montando um plano perfeito para você. Continue, falta pouco!
           </p>
         </div>
 
-        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 space-y-4">
+        <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-3xl p-8 space-y-4 border-2 border-orange-200">
           <div className="flex items-center space-x-4">
             <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
               <Check className="w-7 h-7 text-white" />
@@ -529,7 +547,7 @@ export default function OnboardingQuiz() {
 
         <button
           onClick={() => setCurrentStep(7)}
-          className="w-full bg-white text-orange-600 py-5 rounded-2xl font-bold text-xl hover:shadow-2xl transition-all hover:scale-105"
+          className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-5 rounded-2xl font-bold text-xl hover:shadow-2xl transition-all hover:scale-105"
         >
           Continuar Minha Jornada
         </button>
@@ -539,7 +557,7 @@ export default function OnboardingQuiz() {
             <div
               key={dot}
               className={`h-2 rounded-full transition-all ${
-                dot === 5 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                dot === 5 ? 'w-8 bg-orange-600' : 'w-2 bg-gray-300'
               }`}
             />
           ))}
@@ -554,30 +572,33 @@ export default function OnboardingQuiz() {
     const goalText = quizData.mainGoal === 'lose' ? 'alcançar' : quizData.mainGoal === 'gain' ? 'alcançar' : 'manter'
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-white flex items-center justify-center p-6">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center space-y-4">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
-              <Target className="w-10 h-10 text-white" />
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-100 to-red-100 rounded-full mb-4">
+              <Target className="w-10 h-10 text-purple-600" />
             </div>
-            <h1 className="text-4xl font-bold text-white">Qual é o seu peso ideal?</h1>
-            <p className="text-white/90 text-lg">
+            <div className="mb-4">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-red-500 bg-clip-text text-transparent mb-2">FitScan</h2>
+            </div>
+            <h1 className="text-4xl font-bold text-gray-800">Qual é o seu peso ideal?</h1>
+            <p className="text-gray-600 text-lg">
               Você está em {currentWeight}kg. Qual peso deseja {goalText}?
             </p>
           </div>
 
-          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8">
+          <div className="bg-gradient-to-br from-purple-50 to-red-50 rounded-3xl p-8 border-2 border-purple-200">
             <label className="block text-gray-700 font-semibold mb-3">Peso Alvo (kg)</label>
             <input
               type="number"
               value={quizData.targetWeight}
               onChange={(e) => setQuizData({ ...quizData, targetWeight: e.target.value })}
               placeholder="Ex: 68"
-              className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
+              className="w-full p-5 bg-white rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
             />
             
             {quizData.targetWeight && (
-              <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border-2 border-purple-200">
+              <div className="mt-4 p-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl border-2 border-purple-300">
                 <p className="text-gray-700 font-semibold">
                   {quizData.mainGoal === 'lose' && `Você quer perder ${(currentWeight - parseFloat(quizData.targetWeight)).toFixed(1)}kg`}
                   {quizData.mainGoal === 'gain' && `Você quer ganhar ${(parseFloat(quizData.targetWeight) - currentWeight).toFixed(1)}kg`}
@@ -592,8 +613,8 @@ export default function OnboardingQuiz() {
             disabled={!quizData.targetWeight}
             className={`w-full py-5 rounded-2xl font-bold text-xl transition-all ${
               quizData.targetWeight
-                ? 'bg-white text-purple-600 hover:shadow-2xl hover:scale-105'
-                : 'bg-white/40 text-white/60 cursor-not-allowed'
+                ? 'bg-gradient-to-r from-purple-600 to-red-500 text-white hover:shadow-2xl hover:scale-105'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
           >
             Continuar
@@ -604,7 +625,7 @@ export default function OnboardingQuiz() {
               <div
                 key={dot}
                 className={`h-2 rounded-full transition-all ${
-                  dot === 6 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                  dot === 6 ? 'w-8 bg-purple-600' : 'w-2 bg-gray-300'
                 }`}
               />
             ))}
@@ -621,14 +642,17 @@ export default function OnboardingQuiz() {
     const difference = Math.abs(currentWeight - targetWeight)
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-cyan-600 via-blue-500 to-purple-600 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-white flex items-center justify-center p-6">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center space-y-4">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
-              <Clock className="w-10 h-10 text-white" />
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-cyan-100 to-purple-100 rounded-full mb-4">
+              <Clock className="w-10 h-10 text-cyan-600" />
             </div>
-            <h1 className="text-4xl font-bold text-white">Em quanto tempo?</h1>
-            <p className="text-white/90 text-lg">
+            <div className="mb-4">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent mb-2">FitScan</h2>
+            </div>
+            <h1 className="text-4xl font-bold text-gray-800">Em quanto tempo?</h1>
+            <p className="text-gray-600 text-lg">
               Escolha o prazo ideal para {quizData.mainGoal === 'lose' ? 'perder' : quizData.mainGoal === 'gain' ? 'ganhar' : 'manter'} {difference.toFixed(1)}kg
             </p>
           </div>
@@ -647,8 +671,8 @@ export default function OnboardingQuiz() {
                   setQuizData({ ...quizData, idealTime: option.id })
                   setCurrentStep(9)
                 }}
-                className={`w-full bg-white/95 backdrop-blur-sm rounded-3xl p-6 hover:bg-white transition-all hover:scale-105 hover:shadow-2xl group relative ${
-                  option.recommended ? 'border-4 border-yellow-400' : ''
+                className={`w-full bg-gradient-to-br from-gray-50 to-white border-2 rounded-3xl p-6 hover:shadow-xl transition-all hover:scale-105 group relative ${
+                  option.recommended ? 'border-yellow-400 bg-gradient-to-br from-yellow-50 to-orange-50' : 'border-gray-200 hover:border-cyan-300'
                 }`}
               >
                 {option.recommended && (
@@ -675,7 +699,7 @@ export default function OnboardingQuiz() {
               <div
                 key={dot}
                 className={`h-2 rounded-full transition-all ${
-                  dot === 7 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                  dot === 7 ? 'w-8 bg-cyan-600' : 'w-2 bg-gray-300'
                 }`}
               />
             ))}
@@ -692,14 +716,17 @@ export default function OnboardingQuiz() {
     const difference = Math.abs(currentWeight - targetWeight)
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-600 via-emerald-500 to-teal-500 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-white flex items-center justify-center p-6">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center space-y-4">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
-              <TrendingDown className="w-10 h-10 text-white" />
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-100 to-teal-100 rounded-full mb-4">
+              <TrendingDown className="w-10 h-10 text-green-600" />
             </div>
-            <h1 className="text-4xl font-bold text-white">Meta Semanal</h1>
-            <p className="text-white/90 text-lg">
+            <div className="mb-4">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-teal-500 bg-clip-text text-transparent mb-2">FitScan</h2>
+            </div>
+            <h1 className="text-4xl font-bold text-gray-800">Meta Semanal</h1>
+            <p className="text-gray-600 text-lg">
               Quantos quilos por semana você quer {quizData.mainGoal === 'lose' ? 'perder' : quizData.mainGoal === 'gain' ? 'ganhar' : 'manter'}?
             </p>
           </div>
@@ -717,8 +744,8 @@ export default function OnboardingQuiz() {
                   setQuizData({ ...quizData, weeklyGoal: option.id })
                   setCurrentStep(10)
                 }}
-                className={`w-full bg-white/95 backdrop-blur-sm rounded-3xl p-6 hover:bg-white transition-all hover:scale-105 hover:shadow-2xl group relative ${
-                  option.recommended ? 'border-4 border-yellow-400' : ''
+                className={`w-full bg-gradient-to-br from-gray-50 to-white border-2 rounded-3xl p-6 hover:shadow-xl transition-all hover:scale-105 group relative ${
+                  option.recommended ? 'border-yellow-400 bg-gradient-to-br from-yellow-50 to-orange-50' : 'border-gray-200 hover:border-green-300'
                 }`}
               >
                 {option.recommended && (
@@ -745,7 +772,7 @@ export default function OnboardingQuiz() {
               <div
                 key={dot}
                 className={`h-2 rounded-full transition-all ${
-                  dot === 8 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                  dot === 8 ? 'w-8 bg-green-600' : 'w-2 bg-gray-300'
                 }`}
               />
             ))}
@@ -762,19 +789,22 @@ export default function OnboardingQuiz() {
     const difference = Math.abs(currentWeight - targetWeight)
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-600 via-purple-500 to-indigo-600 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-white flex items-center justify-center p-6">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center space-y-6">
-            <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full mb-4 animate-bounce">
-              <Star className="w-12 h-12 text-white" />
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-pink-100 to-indigo-100 rounded-full mb-4 animate-bounce">
+              <Star className="w-12 h-12 text-pink-600" />
             </div>
-            <h1 className="text-5xl font-bold text-white">Incrível! 🌟</h1>
-            <p className="text-white/90 text-xl leading-relaxed">
+            <div className="mb-4">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-indigo-600 bg-clip-text text-transparent mb-2">FitScan</h2>
+            </div>
+            <h1 className="text-5xl font-bold text-gray-800">Incrível! 🌟</h1>
+            <p className="text-gray-600 text-xl leading-relaxed">
               Seu plano está quase pronto. Você está no caminho certo para alcançar seus objetivos!
             </p>
           </div>
 
-          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 space-y-6">
+          <div className="bg-gradient-to-br from-pink-50 to-indigo-50 rounded-3xl p-8 space-y-6 border-2 border-pink-200">
             <div className="text-center space-y-4">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full">
                 <Trophy className="w-8 h-8 text-white" />
@@ -783,24 +813,24 @@ export default function OnboardingQuiz() {
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl">
+              <div className="flex items-center justify-between p-4 bg-white rounded-2xl border-2 border-pink-200">
                 <span className="text-gray-700 font-semibold">Peso Atual</span>
                 <span className="text-2xl font-bold text-purple-600">{currentWeight}kg</span>
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl">
+              <div className="flex items-center justify-between p-4 bg-white rounded-2xl border-2 border-purple-200">
                 <span className="text-gray-700 font-semibold">Peso Alvo</span>
                 <span className="text-2xl font-bold text-indigo-600">{targetWeight}kg</span>
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl">
+              <div className="flex items-center justify-between p-4 bg-white rounded-2xl border-2 border-indigo-200">
                 <span className="text-gray-700 font-semibold">
                   {quizData.mainGoal === 'lose' ? 'Perder' : quizData.mainGoal === 'gain' ? 'Ganhar' : 'Manter'}
                 </span>
                 <span className="text-2xl font-bold text-blue-600">{difference.toFixed(1)}kg</span>
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl">
+              <div className="flex items-center justify-between p-4 bg-white rounded-2xl border-2 border-blue-200">
                 <span className="text-gray-700 font-semibold">Meta Semanal</span>
                 <span className="text-2xl font-bold text-cyan-600">{quizData.weeklyGoal}kg</span>
               </div>
@@ -809,7 +839,7 @@ export default function OnboardingQuiz() {
 
           <button
             onClick={() => setCurrentStep(11)}
-            className="w-full bg-white text-purple-600 py-5 rounded-2xl font-bold text-xl hover:shadow-2xl transition-all hover:scale-105"
+            className="w-full bg-gradient-to-r from-pink-600 to-indigo-600 text-white py-5 rounded-2xl font-bold text-xl hover:shadow-2xl transition-all hover:scale-105"
           >
             Continuar para Finalizar
           </button>
@@ -819,7 +849,7 @@ export default function OnboardingQuiz() {
               <div
                 key={dot}
                 className={`h-2 rounded-full transition-all ${
-                  dot === 9 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                  dot === 9 ? 'w-8 bg-pink-600' : 'w-2 bg-gray-300'
                 }`}
               />
             ))}
@@ -831,14 +861,17 @@ export default function OnboardingQuiz() {
 
   // Etapa 11: Objetivo de Emagrecimento
   const renderGoalStep = () => (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
-            <Target className="w-10 h-10 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full mb-4">
+            <Target className="w-10 h-10 text-purple-600" />
           </div>
-          <h1 className="text-4xl font-bold text-white">Qual é o seu foco principal?</h1>
-          <p className="text-white/90 text-lg">Escolha o que mais se alinha com você</p>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">FitScan</h2>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-800">Qual é o seu foco principal?</h1>
+          <p className="text-gray-600 text-lg">Escolha o que mais se alinha com você</p>
         </div>
 
         <div className="space-y-4">
@@ -856,7 +889,7 @@ export default function OnboardingQuiz() {
                   setQuizData({ ...quizData, goal: option.id })
                   setCurrentStep(12)
                 }}
-                className="w-full bg-white/95 backdrop-blur-sm rounded-3xl p-6 hover:bg-white transition-all hover:scale-105 hover:shadow-2xl group"
+                className="w-full bg-gradient-to-br from-gray-50 to-white border-2 border-gray-200 rounded-3xl p-6 hover:border-purple-300 hover:shadow-xl transition-all hover:scale-105 group"
               >
                 <div className="flex items-center space-x-4">
                   <div className="w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -878,7 +911,7 @@ export default function OnboardingQuiz() {
             <div
               key={dot}
               className={`h-2 rounded-full transition-all ${
-                dot === 10 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                dot === 10 ? 'w-8 bg-purple-600' : 'w-2 bg-gray-300'
               }`}
             />
           ))}
@@ -889,14 +922,17 @@ export default function OnboardingQuiz() {
 
   // Etapa 12: Tempo disponível
   const renderTimeframeStep = () => (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
-            <Clock className="w-10 h-10 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-100 to-orange-100 rounded-full mb-4">
+            <Clock className="w-10 h-10 text-purple-600" />
           </div>
-          <h1 className="text-4xl font-bold text-white">Quanto tempo você tem por dia?</h1>
-          <p className="text-white/90 text-lg">Para dedicar aos seus objetivos</p>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-orange-500 bg-clip-text text-transparent mb-2">FitScan</h2>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-800">Quanto tempo você tem por dia?</h1>
+          <p className="text-gray-600 text-lg">Para dedicar aos seus objetivos</p>
         </div>
 
         <div className="space-y-4">
@@ -912,7 +948,7 @@ export default function OnboardingQuiz() {
                 setQuizData({ ...quizData, timeframe: option.id })
                 setCurrentStep(13)
               }}
-              className="w-full bg-white/95 backdrop-blur-sm rounded-3xl p-6 hover:bg-white transition-all hover:scale-105 hover:shadow-2xl group"
+              className="w-full bg-gradient-to-br from-gray-50 to-white border-2 border-gray-200 rounded-3xl p-6 hover:border-orange-300 hover:shadow-xl transition-all hover:scale-105 group"
             >
               <div className="flex items-center space-x-4">
                 <div className="w-14 h-14 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -933,7 +969,7 @@ export default function OnboardingQuiz() {
             <div
               key={dot}
               className={`h-2 rounded-full transition-all ${
-                dot === 11 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                dot === 11 ? 'w-8 bg-orange-600' : 'w-2 bg-gray-300'
               }`}
             />
           ))}
@@ -945,14 +981,17 @@ export default function OnboardingQuiz() {
   // Etapa 13: Tutorial do Scanner com Imagem Interativa
   const renderScannerTutorial = () => {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-white flex items-center justify-center p-6">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center space-y-4">
-            <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full mb-4 animate-pulse">
-              <Camera className="w-12 h-12 text-white" />
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-cyan-100 to-purple-100 rounded-full mb-4 animate-pulse">
+              <Camera className="w-12 h-12 text-cyan-600" />
             </div>
-            <h1 className="text-4xl font-bold text-white">Scanner Inteligente</h1>
-            <p className="text-white/90 text-lg">Veja como é simples medir suas calorias</p>
+            <div className="mb-4">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent mb-2">FitScan</h2>
+            </div>
+            <h1 className="text-4xl font-bold text-gray-800">Scanner Inteligente</h1>
+            <p className="text-gray-600 text-lg">Veja como é simples medir suas calorias</p>
           </div>
 
           {/* Componente Scanner Tutorial */}
@@ -960,11 +999,9 @@ export default function OnboardingQuiz() {
 
           <button
             onClick={() => setCurrentStep(14)}
-            className="w-full bg-white py-5 rounded-2xl font-bold text-xl hover:shadow-2xl transition-all hover:scale-105"
+            className="w-full bg-gradient-to-r from-cyan-600 to-purple-600 text-white py-5 rounded-2xl font-bold text-xl hover:shadow-2xl transition-all hover:scale-105"
           >
-            <span className="bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent">
-              Entendi, Continuar
-            </span>
+            Entendi, Continuar
           </button>
 
           <div className="flex justify-center space-x-2 pt-4">
@@ -972,7 +1009,7 @@ export default function OnboardingQuiz() {
               <div
                 key={dot}
                 className={`h-2 rounded-full transition-all ${
-                  dot === 12 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                  dot === 12 ? 'w-8 bg-cyan-600' : 'w-2 bg-gray-300'
                 }`}
               />
             ))}
@@ -984,17 +1021,20 @@ export default function OnboardingQuiz() {
 
   // Etapa 14: Email e Telefone
   const renderContactStep = () => (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4">
-            <Mail className="w-10 h-10 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-100 to-orange-100 rounded-full mb-4">
+            <Mail className="w-10 h-10 text-purple-600" />
           </div>
-          <h1 className="text-4xl font-bold text-white">Seus Dados de Contato</h1>
-          <p className="text-white/90 text-lg">Para manter você conectado</p>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-orange-500 bg-clip-text text-transparent mb-2">FitScan</h2>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-800">Seus Dados de Contato</h1>
+          <p className="text-gray-600 text-lg">Para manter você conectado</p>
         </div>
 
-        <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 space-y-6">
+        <div className="bg-gradient-to-br from-purple-50 to-orange-50 rounded-3xl p-8 space-y-6 border-2 border-purple-200">
           <div>
             <label className="block text-gray-700 font-semibold mb-3 flex items-center space-x-2">
               <Mail className="w-5 h-5" />
@@ -1005,7 +1045,7 @@ export default function OnboardingQuiz() {
               value={quizData.email}
               onChange={(e) => setQuizData({ ...quizData, email: e.target.value })}
               placeholder="seu@email.com"
-              className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
+              className="w-full p-5 bg-white rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
             />
           </div>
 
@@ -1019,7 +1059,7 @@ export default function OnboardingQuiz() {
               value={quizData.phone}
               onChange={(e) => setQuizData({ ...quizData, phone: e.target.value })}
               placeholder="(11) 99999-9999"
-              className="w-full p-5 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
+              className="w-full p-5 bg-white rounded-2xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-gray-800 text-lg"
             />
           </div>
         </div>
@@ -1029,8 +1069,8 @@ export default function OnboardingQuiz() {
           disabled={!quizData.email || !quizData.phone}
           className={`w-full py-5 rounded-2xl font-bold text-xl transition-all ${
             quizData.email && quizData.phone
-              ? 'bg-white text-purple-600 hover:shadow-2xl hover:scale-105'
-              : 'bg-white/40 text-white/60 cursor-not-allowed'
+              ? 'bg-gradient-to-r from-purple-600 to-orange-500 text-white hover:shadow-2xl hover:scale-105'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
           Continuar
@@ -1041,7 +1081,7 @@ export default function OnboardingQuiz() {
             <div
               key={dot}
               className={`h-2 rounded-full transition-all ${
-                dot === 13 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                dot === 13 ? 'w-8 bg-purple-600' : 'w-2 bg-gray-300'
               }`}
             />
           ))}
@@ -1052,14 +1092,17 @@ export default function OnboardingQuiz() {
 
   // Etapa 15: Oferta de Assinatura
   const renderOfferStep = () => (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full mb-4 animate-bounce">
-            <Trophy className="w-12 h-12 text-white" />
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-full mb-4 animate-bounce">
+            <Trophy className="w-12 h-12 text-orange-600" />
           </div>
-          <h1 className="text-4xl font-bold text-white">Parabéns, {quizData.name}! 🎉</h1>
-          <p className="text-white/90 text-xl">Você está pronto para transformar sua vida!</p>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-yellow-600 to-orange-500 bg-clip-text text-transparent mb-2">FitScan</h2>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-800">Parabéns, {quizData.name}! 🎉</h1>
+          <p className="text-gray-600 text-xl">Você está pronto para transformar sua vida!</p>
         </div>
 
         <div className="space-y-4">
@@ -1101,7 +1144,7 @@ export default function OnboardingQuiz() {
           </div>
 
           {/* Plano Mensal */}
-          <div className="bg-white rounded-3xl p-6 shadow-xl">
+          <div className="bg-white rounded-3xl p-6 shadow-xl border-2 border-gray-200">
             <div className="flex items-center space-x-3 mb-4">
               <Sparkles className="w-7 h-7 text-purple-500" />
               <h3 className="text-xl font-bold text-gray-800">Plano Mensal</h3>
@@ -1149,7 +1192,7 @@ export default function OnboardingQuiz() {
             <div
               key={dot}
               className={`h-2 rounded-full transition-all ${
-                dot === 14 ? 'w-8 bg-white' : 'w-2 bg-white/40'
+                dot === 14 ? 'w-8 bg-orange-600' : 'w-2 bg-gray-300'
               }`}
             />
           ))}
